@@ -1,0 +1,298 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ============================================
+// UTILISATEURS ET RÔLES
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  role          String    @default("VOLUNTEER") // ADMIN, MANAGER, VOLUNTEER
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  isActive      Boolean   @default(true)
+
+  // Relations
+  centerId      String?
+  center        Center?   @relation(fields: [centerId], references: [id])
+  distributions Distribution[]
+  stockMovements StockMovement[]
+  ovenLogs      OvenLog[]
+  temperatureLogs TemperatureLog[]
+}
+
+// ============================================
+// CENTRES DE DISTRIBUTION
+// ============================================
+
+model Center {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  postalCode  String
+  phone       String?
+  email       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  campaigns   Campaign[]
+  stocks      Stock[]
+  beneficiaries Beneficiary[]
+  distributions Distribution[]
+  ovenLogs      OvenLog[]
+  temperatureLogs TemperatureLog[]
+}
+
+// ============================================
+// CAMPAGNES D'INSCRIPTION
+// ============================================
+
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  centerId    String
+  center      Center   @relation(fields: [centerId], references: [id])
+  registrations Registration[]
+}
+
+// ============================================
+// BÉNÉFICIAIRES ET FOYERS
+// ============================================
+
+model Beneficiary {
+  id              String   @id @default(cuid())
+  firstName       String
+  lastName        String
+  dateOfBirth     DateTime?
+  phone           String?
+  email           String?
+  address         String?
+  city            String?
+  postalCode      String?
+  
+  // Composition du foyer
+  householdSize   Int      @default(1)
+  adultsCount     Int      @default(1)
+  childrenCount   Int      @default(0)
+  
+  // Situation sociale
+  monthlyIncome   Float?
+  socialStatus    String?  // RSA, ASS, AAH, etc.
+  
+  // Points disponibles pour la distribution
+  pointsBalance   Int      @default(0)
+  
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  centerId        String
+  center          Center   @relation(fields: [centerId], references: [id])
+  registrations   Registration[]
+  distributions   Distribution[]
+}
+
+model Registration {
+  id            String      @id @default(cuid())
+  status        String      @default("PENDING") // PENDING, APPROVED, REJECTED
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  approvedAt    DateTime?
+
+  // Relations  
+  beneficiaryId String
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id])
+  campaignId    String
+  campaign      Campaign    @relation(fields: [campaignId], references: [id])
+
+  @@unique([beneficiaryId, campaignId])
+}
+
+// ============================================
+// PRODUITS ET CATÉGORIES
+// ============================================
+
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  pointsCost  Int       @default(1) // Coût en points par défaut
+  createdAt   DateTime  @default(now())
+  
+  products    Product[]
+}
+
+model Product {
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  unit          String          @default("unité") // kg, litre, unité, etc.
+  pointsCost    Int?            // Surcharge du coût par catégorie
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  categoryId    String
+  category      ProductCategory @relation(fields: [categoryId], references: [id])
+  stocks        Stock[]
+  lots          Lot[]
+  distributionItems DistributionItem[]
+}
+
+// ============================================
+// GESTION DES STOCKS
+// ============================================
+
+model Stock {
+  id          String   @id @default(cuid())
+  quantity    Float    @default(0)
+  minQuantity Float    @default(0) // Seuil d'alerte
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  centerId    String
+  center      Center   @relation(fields: [centerId], references: [id])
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  lots        Lot[]
+  movements   StockMovement[]
+
+  @@unique([centerId, productId])
+}
+
+model Lot {
+  id            String    @id @default(cuid())
+  batchNumber   String?
+  quantity      Float
+  expiryDate    DateTime?
+  receivedDate  DateTime  @default(now())
+  source        String?   // Donateur, fournisseur, etc.
+  notes         String?
+  
+  // Relations
+  productId     String
+  product       Product   @relation(fields: [productId], references: [id])
+  stockId       String
+  stock         Stock     @relation(fields: [stockId], references: [id])
+  movements     StockMovement[]
+}
+
+// ============================================
+// MOUVEMENTS DE STOCK
+// ============================================
+
+model StockMovement {
+  id            String   @id @default(cuid())
+  type          String   // ENTRY, EXIT, ADJUSTMENT, LOSS, TRANSFER
+  quantity      Float
+  reason        String?
+  createdAt     DateTime @default(now())
+
+  // Relations
+  lotId         String?
+  lot           Lot?     @relation(fields: [lotId], references: [id])
+  stockId       String
+  stock         Stock    @relation(fields: [stockId], references: [id])
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  distributionId String?
+  distribution  Distribution? @relation(fields: [distributionId], references: [id])
+}
+
+// ============================================
+// DISTRIBUTIONS
+// ============================================
+
+model Distribution {
+  id            String   @id @default(cuid())
+  totalPoints   Int      @default(0)
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  // Relations
+  beneficiaryId String
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id])
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  centerId      String
+  center        Center   @relation(fields: [centerId], references: [id])
+  items         DistributionItem[]
+  movements     StockMovement[]
+}
+
+model DistributionItem {
+  id            String   @id @default(cuid())
+  quantity      Float
+  pointsCost    Int
+
+  // Relations
+  distributionId String
+  distribution   Distribution @relation(fields: [distributionId], references: [id])
+  productId      String
+  product        Product      @relation(fields: [productId], references: [id])
+}
+
+// ============================================
+// QUALITÉ & HYGIÈNE
+// ============================================
+
+// Enregistrement des heures d'allumage/extinction four
+model OvenLog {
+  id          String    @id @default(cuid())
+  ovenName    String    // "Four 1", "Four 2", etc.
+  turnOnTime  DateTime
+  turnOffTime DateTime?
+  temperature Int?      // Température cible en °C
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  centerId    String
+  center      Center    @relation(fields: [centerId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+// Relevés de température des plats (HACCP)
+model TemperatureLog {
+  id            String   @id @default(cuid())
+  dishName      String   // Nom du plat
+  temperature   Float    // Température mesurée en °C
+  checkType     String   // "RECEPTION", "STOCKAGE", "SERVICE", "REFROIDISSEMENT"
+  isCompliant   Boolean  @default(true) // Conforme aux normes HACCP
+  measuredAt    DateTime @default(now())
+  notes         String?
+
+  // Relations
+  centerId      String
+  center        Center   @relation(fields: [centerId], references: [id])
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+}
