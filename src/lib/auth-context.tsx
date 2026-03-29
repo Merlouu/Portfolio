@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const savedUser = localStorage.getItem('coeursolidaire_user')
         if (savedUser) {
             try {
-                setUser(JSON.parse(savedUser))
+                setUser(JSON.parse(savedUser) as User)
             } catch {
                 localStorage.removeItem('coeursolidaire_user')
             }

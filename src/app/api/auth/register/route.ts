@@ -78,7 +78,8 @@ export async function POST(request: Request) {
                 childrenCount: childrenCount || 0,
                 householdSize: (adultsCount || 1) + (childrenCount || 0),
                 pointsBalance,
-                centerId: defaultCenter.id
+                centerId: defaultCenter.id,
+                userId: user.id
             }
         })
 

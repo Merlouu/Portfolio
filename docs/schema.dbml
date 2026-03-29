@@ -1,0 +1,177 @@
+// CoeurSolidaire Database Schema
+// Pour visualiser: copier ce fichier sur https://dbdiagram.io
+
+Table User {
+  id String [pk]
+  email String [unique]
+  name String
+  passwordHash String
+  role String [default: 'VOLUNTEER', note: 'ADMIN, MANAGER, VOLUNTEER']
+  phone String
+  createdAt DateTime
+  updatedAt DateTime
+  isActive Boolean [default: true]
+  centerId String [ref: > Center.id]
+}
+
+Table Center {
+  id String [pk]
+  name String
+  address String
+  city String
+  postalCode String
+  phone String
+  email String
+  isActive Boolean [default: true]
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+Table Campaign {
+  id String [pk]
+  name String
+  description String
+  startDate DateTime
+  endDate DateTime
+  isActive Boolean [default: true]
+  createdAt DateTime
+  updatedAt DateTime
+  centerId String [ref: > Center.id]
+}
+
+Table Beneficiary {
+  id String [pk]
+  firstName String
+  lastName String
+  dateOfBirth DateTime
+  phone String
+  email String
+  address String
+  city String
+  postalCode String
+  householdSize Int [default: 1]
+  adultsCount Int [default: 1]
+  childrenCount Int [default: 0]
+  monthlyIncome Float
+  socialStatus String [note: 'RSA, ASS, AAH, etc.']
+  pointsBalance Int [default: 0]
+  isActive Boolean [default: true]
+  createdAt DateTime
+  updatedAt DateTime
+  centerId String [ref: > Center.id]
+  userId String [unique, ref: > User.id]
+}
+
+Table Registration {
+  id String [pk]
+  status String [default: 'PENDING', note: 'PENDING, APPROVED, REJECTED']
+  notes String
+  createdAt DateTime
+  updatedAt DateTime
+  approvedAt DateTime
+  beneficiaryId String [ref: > Beneficiary.id]
+  campaignId String [ref: > Campaign.id]
+  
+  indexes {
+    (beneficiaryId, campaignId) [unique]
+  }
+}
+
+Table ProductCategory {
+  id String [pk]
+  name String [unique]
+  description String
+  pointsCost Int [default: 1]
+  createdAt DateTime
+}
+
+Table Product {
+  id String [pk]
+  name String
+  description String
+  unit String [default: 'unité', note: 'kg, litre, unité, etc.']
+  pointsCost Int
+  isActive Boolean [default: true]
+  createdAt DateTime
+  updatedAt DateTime
+  categoryId String [ref: > ProductCategory.id]
+}
+
+Table Stock {
+  id String [pk]
+  quantity Float [default: 0]
+  minQuantity Float [default: 0, note: 'Seuil alerte']
+  updatedAt DateTime
+  centerId String [ref: > Center.id]
+  productId String [ref: > Product.id]
+  
+  indexes {
+    (centerId, productId) [unique]
+  }
+}
+
+Table Lot {
+  id String [pk]
+  batchNumber String
+  quantity Float
+  expiryDate DateTime
+  receivedDate DateTime
+  source String [note: 'Donateur, fournisseur']
+  notes String
+  productId String [ref: > Product.id]
+  stockId String [ref: > Stock.id]
+}
+
+Table StockMovement {
+  id String [pk]
+  type String [note: 'ENTRY, EXIT, ADJUSTMENT, LOSS, TRANSFER']
+  quantity Float
+  reason String
+  createdAt DateTime
+  lotId String [ref: > Lot.id]
+  stockId String [ref: > Stock.id]
+  userId String [ref: > User.id]
+  distributionId String [ref: > Distribution.id]
+}
+
+Table Distribution {
+  id String [pk]
+  totalPoints Int [default: 0]
+  notes String
+  createdAt DateTime
+  beneficiaryId String [ref: > Beneficiary.id]
+  userId String [ref: > User.id]
+  centerId String [ref: > Center.id]
+}
+
+Table DistributionItem {
+  id String [pk]
+  quantity Float
+  pointsCost Int
+  distributionId String [ref: > Distribution.id]
+  productId String [ref: > Product.id]
+}
+
+Table OvenLog {
+  id String [pk]
+  ovenName String [note: 'Four 1, Four 2, etc.']
+  turnOnTime DateTime
+  turnOffTime DateTime
+  temperature Int [note: 'Température cible °C']
+  notes String
+  createdAt DateTime
+  centerId String [ref: > Center.id]
+  userId String [ref: > User.id]
+}
+
+Table TemperatureLog {
+  id String [pk]
+  dishName String
+  temperature Float [note: 'Température °C']
+  checkType String [note: 'RECEPTION, STOCKAGE, SERVICE, REFROIDISSEMENT']
+  isCompliant Boolean [default: true, note: 'Conforme HACCP']
+  measuredAt DateTime
+  notes String
+  centerId String [ref: > Center.id]
+  userId String [ref: > User.id]
+}

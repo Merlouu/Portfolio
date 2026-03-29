@@ -339,7 +339,7 @@ export default function RegisterPage() {
                     <div className="flex flex-col gap-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="form-group">
-                                <label className="label">Nombre d'adultes *</label>
+                                <label className="label">Nombre d&apos;adultes *</label>
                                 <input
                                     type="number"
                                     className="input"
@@ -349,7 +349,7 @@ export default function RegisterPage() {
                                 />
                             </div>
                             <div className="form-group">
-                                <label className="label">Nombre d'enfants</label>
+                                <label className="label">Nombre d&apos;enfants</label>
                                 <input
                                     type="number"
                                     className="input"

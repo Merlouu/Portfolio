@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoeurSolidaire Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a202c;
+            color: white;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2d3748;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .content {
+            margin-left: 250px;
+            height: 100%;
+            width: calc(100% - 250px);
+            position: relative;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #a0aec0;
+        }
+
+        .nav-item:hover {
+            background-color: #4a5568;
+            color: white;
+        }
+
+        .nav-item.active {
+            background-color: #3182ce;
+            color: white;
+            border-left: 4px solid #63b3ed;
+        }
+
+        .logo {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #63b3ed;
+            border-bottom: 1px solid #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .refresh-btn {
+            margin-top: auto;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            color: #718096;
+            font-size: 0.8rem;
+            border-top: 1px solid #4a5568;
+        }
+
+        .refresh-btn:hover {
+            color: white;
+        }
+
+        #model-view {
+            display: none;
+            padding: 20px;
+            height: 100%;
+            overflow: auto;
+            background: #edf2f7;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        #data-view {
+            display: block;
+            height: 100%;
+        }
+
+        object {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Zoom controls for SVG */
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .zoom-btn {
+            background: #2d3748;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .zoom-btn:hover {
+            background: #4a5568;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">💙 CoeurSolidaire</div>
+        <div class="nav-item active" onclick="showTab('data')" id="tab-data">
+            <span>📊</span> Données (Prisma Studio)
+        </div>
+        <div class="nav-item" onclick="showTab('model')" id="tab-model">
+            <span>🕸️</span> Modélisation (ERD)
+        </div>
+        <div class="refresh-btn" onclick="location.reload()">
+            🔄 Rafraîchir
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Vue Données -->
+        <div id="data-view">
+            <div class="bg-gray-800 p-2 text-center text-sm">
+                Si Prisma Studio ne s'affiche pas ci-dessous, <a href="http://localhost:5556" target="_blank"
+                    class="text-blue-400 underline">cliquez ici pour l'ouvrir dans un nouvel onglet</a>.
+            </div>
+            <iframe src="http://localhost:5556" class="iframe-container" id="studio-frame"></iframe>
+            <div id="studio-error" style="display:none; padding: 40px; text-align: center; color: #cbd5e0;">
+                <h2 class="text-xl mb-4">Prisma Studio n'est pas accessible</h2>
+                <p>Assurez-vous que la commande <code>npx prisma studio</code> est bien lancée dans le terminal.</p>
+                <button
+                    onclick="document.getElementById('studio-frame').src = document.getElementById('studio-frame').src"
+                    class="mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-500">Réessayer</button>
+            </div>
+        </div>
+
+        <!-- Vue Modèle -->
+        <div id="model-view" style="display:none;">
+            <div
+                class="bg-white p-4 rounded shadow-lg min-w-[800px] min-h-[600px] flex justify-center items-center relative">
+                <object id="svg-object" type="image/svg+xml" data="schema.svg" style="max-height: 90vh;"></object>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Update active state
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            // Show content
+            if (tabName === 'data') {
+                document.getElementById('data-view').style.display = 'block';
+                document.getElementById('model-view').style.display = 'none';
+            } else {
+                document.getElementById('data-view').style.display = 'none';
+                document.getElementById('model-view').style.display = 'flex';
+                // Reload SVG to ensure latest version
+                const obj = document.getElementById('svg-object');
+                obj.data = obj.data.split('?')[0] + '?t=' + new Date().getTime();
+            }
+        }
+
+        // Check if Iframe loads (simple check via timeout roughly, can't access cross-origin content)
+        const frame = document.getElementById('studio-frame');
+        frame.onload = function () {
+            // Studio loaded
+        };
+
+        // Default to Data tab
+        showTab('data');
+    </script>
+</body>
+
+</html>

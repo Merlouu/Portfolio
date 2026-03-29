@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
         })
 
         return NextResponse.json({ data: logs })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error fetching temperature logs:', error)
         return NextResponse.json({ error: 'Erreur lors de la récupération des relevés' }, { status: 500 })
     }
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
                 : '⚠️ Relevé enregistré - NON CONFORME HACCP'
         }, { status: 201 })
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error creating temperature log:', error)
         return NextResponse.json({ error: 'Erreur lors de l\'enregistrement' }, { status: 500 })
     }

@@ -103,7 +103,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="page-title">Bonjour, {user?.name?.split(' ')[0]} 👋</h1>
           <p className="page-description">
-            Voici un aperçu de l'activité de CoeurSolidaire aujourd'hui
+            Voici un aperçu de l&apos;activité de CoeurSolidaire aujourd&apos;hui
           </p>
         </div>
         <div className="flex gap-3">
@@ -471,7 +471,7 @@ export default function DashboardPage() {
               className="btn btn-ghost btn-sm w-full"
               style={{ marginTop: 'var(--space-4)' }}
             >
-              Voir tout l'historique
+              Voir tout l&apos;historique
             </Link>
           </div>
 

@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
                 ).length
             }
         })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Expiring lots API error:', error)
         return NextResponse.json({ error: 'Erreur lors du chargement' }, { status: 500 })
     }

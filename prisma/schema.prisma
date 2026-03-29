@@ -5,8 +5,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../docs/schema.svg"
+  theme    = "dark"
+}
+
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // ============================================
@@ -31,6 +38,7 @@ model User {
   stockMovements StockMovement[]
   ovenLogs      OvenLog[]
   temperatureLogs TemperatureLog[]
+  beneficiary   Beneficiary?
 }
 
 // ============================================
@@ -113,6 +121,8 @@ model Beneficiary {
   // Relations
   centerId        String
   center          Center   @relation(fields: [centerId], references: [id])
+  userId          String?  @unique
+  user            User?    @relation(fields: [userId], references: [id])
   registrations   Registration[]
   distributions   Distribution[]
 }

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoeurSolidaire - Schéma Base de Données</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #888;
+        }
+        .diagram-container {
+            background: #0f0f23;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            overflow-x: auto;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        .legend h3 { color: #00d4ff; margin-bottom: 15px; }
+        .legend-item { margin: 8px 0; display: flex; align-items: center; gap: 10px; }
+        .legend-color { width: 20px; height: 20px; border-radius: 4px; }
+        .users { background: #667eea; }
+        .centers { background: #48bb78; }
+        .beneficiaries { background: #ed8936; }
+        .products { background: #9f7aea; }
+        .stock { background: #38b2ac; }
+        .hygiene { background: #fc8181; }
+    </style>
+</head>
+<body>
+    <h1>🗄️ CoeurSolidaire - Modèle de Base de Données</h1>
+    <p class="subtitle">Diagramme des relations entre les tables</p>
+    
+    <div class="diagram-container">
+        <div class="mermaid">
+erDiagram
+    User ||--o{ Distribution : "effectue"
+    User ||--o{ StockMovement : "enregistre"
+    User ||--o{ OvenLog : "enregistre"
+    User ||--o{ TemperatureLog : "enregistre"
+    User |o--o| Beneficiary : "peut être"
+    User }o--|| Center : "travaille dans"
+    
+    Center ||--o{ User : "emploie"
+    Center ||--o{ Campaign : "organise"
+    Center ||--o{ Stock : "stocke"
+    Center ||--o{ Beneficiary : "inscrit"
+    Center ||--o{ Distribution : "effectue"
+    Center ||--o{ OvenLog : "surveille"
+    Center ||--o{ TemperatureLog : "contrôle"
+    
+    Campaign ||--o{ Registration : "contient"
+    Campaign }o--|| Center : "appartient à"
+    
+    Beneficiary ||--o{ Registration : "s'inscrit"
+    Beneficiary ||--o{ Distribution : "reçoit"
+    Beneficiary }o--|| Center : "inscrit à"
+    
+    Registration }o--|| Beneficiary : "concerne"
+    Registration }o--|| Campaign : "pour"
+    
+    ProductCategory ||--o{ Product : "contient"
+    
+    Product ||--o{ Stock : "dans"
+    Product ||--o{ Lot : "en lots"
+    Product ||--o{ DistributionItem : "distribué"
+    Product }o--|| ProductCategory : "catégorie"
+    
+    Stock ||--o{ Lot : "contient"
+    Stock ||--o{ StockMovement : "mouvements"
+    Stock }o--|| Center : "dans"
+    Stock }o--|| Product : "de"
+    
+    Lot ||--o{ StockMovement : "mouvements"
+    Lot }o--|| Product : "contient"
+    Lot }o--|| Stock : "dans"
+    
+    StockMovement }o--o| Lot : "concerne"
+    StockMovement }o--|| Stock : "sur"
+    StockMovement }o--|| User : "par"
+    StockMovement }o--o| Distribution : "pour"
+    
+    Distribution ||--o{ DistributionItem : "contient"
+    Distribution ||--o{ StockMovement : "génère"
+    Distribution }o--|| Beneficiary : "pour"
+    Distribution }o--|| User : "par"
+    Distribution }o--|| Center : "dans"
+    
+    DistributionItem }o--|| Distribution : "dans"
+    DistributionItem }o--|| Product : "de"
+    
+    OvenLog }o--|| Center : "dans"
+    OvenLog }o--|| User : "par"
+    
+    TemperatureLog }o--|| Center : "dans"
+    TemperatureLog }o--|| User : "par"
+
+    User {
+        string id PK
+        string email UK
+        string name
+        string passwordHash
+        string role
+        string phone
+        boolean isActive
+        string centerId FK
+    }
+    
+    Center {
+        string id PK
+        string name
+        string address
+        string city
+        string postalCode
+        string phone
+        string email
+        boolean isActive
+    }
+    
+    Campaign {
+        string id PK
+        string name
+        string description
+        datetime startDate
+        datetime endDate
+        boolean isActive
+        string centerId FK
+    }
+    
+    Beneficiary {
+        string id PK
+        string firstName
+        string lastName
+        datetime dateOfBirth
+        string phone
+        string email
+        string address
+        int householdSize
+        int adultsCount
+        int childrenCount
+        float monthlyIncome
+        string socialStatus
+        int pointsBalance
+        boolean isActive
+        string centerId FK
+        string userId FK
+    }
+    
+    Registration {
+        string id PK
+        string status
+        string notes
+        datetime approvedAt
+        string beneficiaryId FK
+        string campaignId FK
+    }
+    
+    ProductCategory {
+        string id PK
+        string name UK
+        string description
+        int pointsCost
+    }
+    
+    Product {
+        string id PK
+        string name
+        string description
+        string unit
+        int pointsCost
+        boolean isActive
+        string categoryId FK
+    }
+    
+    Stock {
+        string id PK
+        float quantity
+        float minQuantity
+        string centerId FK
+        string productId FK
+    }
+    
+    Lot {
+        string id PK
+        string batchNumber
+        float quantity
+        datetime expiryDate
+        datetime receivedDate
+        string source
+        string notes
+        string productId FK
+        string stockId FK
+    }
+    
+    StockMovement {
+        string id PK
+        string type
+        float quantity
+        string reason
+        datetime createdAt
+        string lotId FK
+        string stockId FK
+        string userId FK
+        string distributionId FK
+    }
+    
+    Distribution {
+        string id PK
+        int totalPoints
+        string notes
+        datetime createdAt
+        string beneficiaryId FK
+        string userId FK
+        string centerId FK
+    }
+    
+    DistributionItem {
+        string id PK
+        float quantity
+        int pointsCost
+        string distributionId FK
+        string productId FK
+    }
+    
+    OvenLog {
+        string id PK
+        string ovenName
+        datetime turnOnTime
+        datetime turnOffTime
+        int temperature
+        string notes
+        string centerId FK
+        string userId FK
+    }
+    
+    TemperatureLog {
+        string id PK
+        string dishName
+        float temperature
+        string checkType
+        boolean isCompliant
+        datetime measuredAt
+        string notes
+        string centerId FK
+        string userId FK
+    }
+        </div>
+    </div>
+    
+    <div class="legend">
+        <h3>📋 Légende des Tables</h3>
+        <div class="legend-item"><div class="legend-color users"></div> <strong>User</strong> - Utilisateurs (Admin, Manager, Volontaire)</div>
+        <div class="legend-item"><div class="legend-color centers"></div> <strong>Center</strong> - Centres de distribution</div>
+        <div class="legend-item"><div class="legend-color beneficiaries"></div> <strong>Beneficiary</strong> - Bénéficiaires inscrits</div>
+        <div class="legend-item"><div class="legend-color products"></div> <strong>Product/ProductCategory</strong> - Produits et catégories</div>
+        <div class="legend-item"><div class="legend-color stock"></div> <strong>Stock/Lot/StockMovement</strong> - Gestion des stocks</div>
+        <div class="legend-item"><div class="legend-color hygiene"></div> <strong>OvenLog/TemperatureLog</strong> - Contrôles hygiène HACCP</div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            er: {
+                layoutDirection: 'TB',
+                minEntityWidth: 100,
+                minEntityHeight: 75,
+                entityPadding: 15
+            }
+        });
+    </script>
+</body>
+</html>

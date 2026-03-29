@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         }
 
         return NextResponse.json({ data: filteredStocks })
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error fetching stocks:', error)
         return NextResponse.json({ error: 'Erreur lors de la récupération des stocks' }, { status: 500 })
     }
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
             message: 'Entrée de stock enregistrée avec succès'
         }, { status: 201 })
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error creating stock entry:', error)
         return NextResponse.json({ error: 'Erreur lors de l\'entrée de stock' }, { status: 500 })
     }

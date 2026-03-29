@@ -201,7 +201,7 @@ export default function MyAccountPage() {
                             </svg>
                             <div>
                                 <div style={{ fontWeight: 600, fontSize: '0.875rem', marginBottom: 'var(--space-1)' }}>
-                                    Horaires d'ouverture
+                                    Horaires d&apos;ouverture
                                 </div>
                                 <div style={{ fontSize: '0.875rem', color: 'var(--foreground-muted)' }}>
                                     Mardi et Jeudi : 9h - 12h<br />
