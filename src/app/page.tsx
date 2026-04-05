@@ -115,7 +115,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#f7f5ef_0%,#f3f0e6_24%,#fcfbf7_58%,#ffffff_100%)] text-slate-900">
       <div className="w-full px-4 pb-14 pt-3 sm:px-6 sm:pb-16 lg:px-8 lg:pb-20 xl:px-10 2xl:px-12">
-        <header className="sticky top-0 z-20 mb-6 rounded-[1.6rem] border border-slate-200/70 bg-white/90 px-4 py-4 shadow-[0_18px_44px_-28px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:px-5 lg:px-6">
+        <header className="mb-5 rounded-[1.35rem] border border-slate-200/70 bg-white/90 px-4 py-3 shadow-[0_18px_44px_-28px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:sticky sm:top-0 sm:z-20 sm:mb-6 sm:px-5 sm:py-4 lg:px-6">
           <div className="flex flex-col gap-4">
             <div className="flex items-start gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-sm font-semibold tracking-[0.2em] text-white">
@@ -125,10 +125,10 @@ export default function HomePage() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
                   Portfolio
                 </p>
-                <p className="mt-1 text-2xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-[2rem]">
+                <p className="mt-1 text-[1.45rem] font-semibold tracking-[-0.04em] text-slate-950 sm:text-[2rem]">
                   Merlin Debrais
                 </p>
-                <p className="mt-1 text-sm font-medium text-slate-600 sm:text-[15px]">
+                <p className="mt-1 text-[13px] font-medium text-slate-600 sm:text-[15px]">
                   Business Analyst | Supply Chain | Forecasting | Digitalisation
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-500 sm:text-xs">
@@ -146,22 +146,22 @@ export default function HomePage() {
             </div>
 
             <div className="border-t border-slate-200 pt-3">
-              <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs">
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px] sm:gap-2 sm:text-xs">
                 <a
                   href="#about"
-                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-3.5 sm:py-2"
                 >
                   À propos
                 </a>
                 <a
                   href="#projects"
-                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-3.5 sm:py-2"
                 >
                   Projets
                 </a>
                 <a
                   href="#tools"
-                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-3.5 sm:py-2"
                 >
                   Outils
                 </a>
@@ -169,7 +169,7 @@ export default function HomePage() {
                   href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                  className="inline-flex min-h-[36px] items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-[11px] font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-4 sm:py-2.5 sm:text-xs"
                 >
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5 fill-current">
                     <path d="M4.98 3.5A2.48 2.48 0 1 0 5 8.46 2.48 2.48 0 0 0 4.98 3.5ZM3 9h4v12H3zm7 0h3.83v1.64h.06c.53-1 1.84-2.06 3.79-2.06C21.2 8.58 22 10.87 22 14.07V21h-4v-6.15c0-1.47-.03-3.36-2.05-3.36-2.05 0-2.36 1.6-2.36 3.25V21h-4z" />
@@ -178,7 +178,7 @@ export default function HomePage() {
                 </a>
                 <a
                   href="mailto:merlin.debrais@gmail.com"
-                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 text-[11px] font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-4 sm:py-2.5 sm:text-xs"
                 >
                   Me contacter
                 </a>
@@ -186,7 +186,7 @@ export default function HomePage() {
                   href="/cv-merlin-debrais.pdf"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-[40px] items-center justify-center rounded-full bg-slate-950 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800"
+                  className="inline-flex min-h-[36px] items-center justify-center rounded-full bg-slate-950 px-3.5 py-2 text-[11px] font-semibold text-white transition hover:bg-slate-800 sm:min-h-[40px] sm:px-4 sm:py-2.5 sm:text-xs"
                 >
                   CV PDF
                 </a>
@@ -195,12 +195,12 @@ export default function HomePage() {
           </div>
         </header>
 
-        <section className="grid gap-6 pb-12 pt-5 xl:grid-cols-[1.2fr_0.8fr] xl:items-start xl:gap-8 xl:pb-16">
+        <section className="grid gap-5 pb-10 pt-4 sm:pb-12 sm:pt-5 xl:grid-cols-[1.2fr_0.8fr] xl:items-start xl:gap-8 xl:pb-16">
           <div className="max-w-4xl">
             <p className="mb-4 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
               Profil hybride business + data + opérations
             </p>
-            <h1 className="max-w-5xl text-[clamp(2.4rem,5vw,4.7rem)] font-semibold leading-[0.93] tracking-[-0.055em] text-slate-950">
+            <h1 className="max-w-5xl text-[clamp(2rem,5vw,4.7rem)] font-semibold leading-[0.95] tracking-[-0.055em] text-slate-950">
               Je transforme des besoins métiers en solutions concrètes pour la supply chain, la data et la décision.
             </h1>
             <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
@@ -229,11 +229,11 @@ export default function HomePage() {
               </a>
             </div>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:max-w-3xl xl:grid-cols-4">
+            <div className="mt-7 grid gap-2.5 sm:grid-cols-2 xl:max-w-3xl xl:grid-cols-4">
               {impactStats.map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-[1.35rem] border border-slate-200 bg-white/90 px-4 py-4 shadow-[0_16px_40px_-30px_rgba(15,23,42,0.22)]"
+                  className="rounded-[1.15rem] border border-slate-200 bg-white/90 px-3.5 py-3.5 shadow-[0_16px_40px_-30px_rgba(15,23,42,0.22)] sm:rounded-[1.35rem] sm:px-4 sm:py-4"
                 >
                   <p className="text-xl font-semibold tracking-[-0.04em] text-slate-950">
                     {item.value}
@@ -244,7 +244,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="rounded-[1.75rem] border border-slate-200 bg-white/78 p-5 shadow-[0_20px_50px_-34px_rgba(15,23,42,0.3)] backdrop-blur sm:p-6">
+          <aside className="rounded-[1.4rem] border border-slate-200 bg-white/78 p-4 shadow-[0_20px_50px_-34px_rgba(15,23,42,0.3)] backdrop-blur sm:rounded-[1.75rem] sm:p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
               Positionnement
             </p>
@@ -279,7 +279,7 @@ export default function HomePage() {
           </aside>
         </section>
 
-        <section id="about" className="border-t border-slate-200/80 py-14 sm:py-16 lg:py-20">
+        <section id="about" className="border-t border-slate-200/80 py-11 sm:py-16 lg:py-20">
           <div className="mb-8 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
               À propos
@@ -318,7 +318,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="projects" className="border-t border-slate-200/80 py-14 sm:py-16 lg:py-20">
+        <section id="projects" className="border-t border-slate-200/80 py-11 sm:py-16 lg:py-20">
           <div className="mb-10 max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
               Projets à impact
@@ -351,7 +351,7 @@ export default function HomePage() {
                   </div>
                 ) : null}
 
-                <div className="p-6 sm:p-7">
+                <div className="p-5 sm:p-7">
                   <h3 className="text-[1.38rem] font-semibold tracking-[-0.03em] text-slate-950 sm:text-[1.55rem]">
                     {project.title}
                   </h3>
@@ -402,7 +402,7 @@ export default function HomePage() {
 
         <section
           id="tools"
-          className="grid gap-8 border-t border-slate-200/80 py-14 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-20"
+          className="grid gap-6 border-t border-slate-200/80 py-11 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-20"
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
@@ -425,8 +425,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="contact" className="border-t border-slate-200/80 py-14 sm:py-16 lg:py-20">
-          <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 px-6 py-8 text-white shadow-[0_30px_90px_-45px_rgba(15,23,42,0.8)] sm:px-8 sm:py-10">
+        <section id="contact" className="border-t border-slate-200/80 py-11 sm:py-16 lg:py-20">
+          <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-950 px-5 py-7 text-white shadow-[0_30px_90px_-45px_rgba(15,23,42,0.8)] sm:rounded-[2rem] sm:px-8 sm:py-10">
             <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">
