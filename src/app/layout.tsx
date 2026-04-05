@@ -1,32 +1,20 @@
-import './globals.css'
-import { AuthProvider } from '@/lib/auth-context'
-import { ToastProvider } from '@/lib/toast-context'
-import { ThemeProvider } from '@/lib/theme-context'
-import AppShell from '@/components/AppShell'
+import type { Metadata } from "next";
+import "./globals.css";
 
-export const metadata = {
-  title: 'CoeurSolidaire - Gestion de Banque Alimentaire',
-  description: 'Application de gestion pour associations de banque alimentaire et aide sociale',
-}
+export const metadata: Metadata = {
+  title: "Portfolio | Business Analyst & Forecaster Supply Chain",
+  description:
+    "Portfolio professionnel pour accompagner un CV de Business Analyst et Forecaster Supply Chain, avec des projets qui mettent en avant analyse, pilotage et structuration de données.",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <body>
-        <ThemeProvider>
-          <AuthProvider>
-            <ToastProvider>
-              <AppShell>
-                {children}
-              </AppShell>
-            </ToastProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
+    <html lang="fr">
+      <body>{children}</body>
     </html>
-  )
+  );
 }

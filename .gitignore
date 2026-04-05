@@ -29,6 +29,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+dev*.log
+*.err.log
+error.log
+success.log
+log.txt
+test-output.txt
+lint_full.log
+lint_report.txt
 
 # env files (can opt-in for committing if needed)
 .env*
@@ -41,3 +49,8 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+/src/legacy-app
+/node_modules_link
+/node_modules_partial
+/photo
+/ScreenAutotraders.png

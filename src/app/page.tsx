@@ -1,551 +1,502 @@
-'use client'
+﻿import Image from "next/image";
 
-import Link from 'next/link'
-import { useAuth } from '@/lib/auth-context'
-import { useState, useEffect } from 'react'
+const impactStats = [
+  { value: "500+", label: "références pilotées en prévision mensuelle" },
+  { value: "1 300+", label: "références suivies pour la fiabilisation MRP" },
+  { value: "-65%", label: "temps de maintenance réduit sur un reporting VBA" },
+];
 
-interface StatsData {
-  stats: {
-    beneficiaries: { total: number; newThisMonth: number; trend: string }
-    distributions: { total: number; thisWeek: number; trend: string }
-    stocks: { lowItems: number; criticalItems: number; totalProducts: number }
-    volunteers: { active: number; thisMonth: number }
-  }
-  weeklyDistributions: { day: string; count: number }[]
-  topProducts: { name: string; count: number; percentage: number }[]
-  recentActivities: { type: string; message: string; time: string; icon: string }[]
-  forecasts: {
-    nextWeekDistributions: number
-    nextWeekBeneficiaries: number
-    stocksToOrder: { name: string; current: number; needed: number; urgency: string }[]
-  }
-}
+const projects = [
+  {
+    featured: true,
+    title: "Système de trading supervisé et aide à la décision",
+    context:
+      "Projet construit en deux temps : un socle initial sur Google Sheets, puis un système plus structuré pour stocker, analyser, exécuter et superviser.",
+    problem:
+      "La première version fonctionnait, mais demandait trop d'entretien et restait difficile à lire entre donnée, signal, ordre et supervision.",
+    solution:
+      "Construction d'une console unifiée avec base de données, analytique et scoring IA, exécution automatique, contrôle du risque, supervision et maintenance assistée.",
+    result:
+      "Lecture plus nette du marché, décisions mieux tracées, exécution automatique plus lisible et système plus facile à surveiller et faire évoluer.",
+    tools: ["Algo trading", "BDD", "IA", "Backtesting", "Détection d'anomalies", "Supervision"],
+    cta: "/projects/finance",
+    ctaLabel: "Voir le projet",
+    media: {
+      src: "/project-media/finance-home-auto-traders.png",
+      alt: "Accueil Auto Traders du projet finance",
+    },
+  },
+  {
+    title: "Analyses supply chain et pilotage décisionnel chez CBA Meubles",
+    context:
+      "Travaux menés pendant mon alternance chez CBA Meubles, dans un environnement supply chain avec besoin d'outils de décision plus fiables sur la prévision, les stocks, les clients et les signaux marché.",
+    problem:
+      "Plusieurs sujets restaient dispersés ou traités manuellement : stocks morts, archivage, suivi automatisé, contrôle des prix clients et arbitrage des demandes de prévision.",
+    solution:
+      "Développement d'analyses ciblées et d'outils de pilotage sur les stocks morts, l'archivage et le suivi automatisé des stocks, le scraping des prix clients avec alertes promotions, et l'analyse des clients sur leur CA N-1 pour filtrer les demandes de prévision.",
+    result:
+      "Pilotage rendu plus lisible sur 500+ références en prévision mensuelle et 1 300+ références suivies, avec des arbitrages davantage fondés sur la donnée et le poids réel des clients ou des articles.",
+    tools: ["Forecasting", "MRP", "Stocks", "API", "Alertes", "Analyse client"],
+    cta: "#contact",
+    ctaLabel: "Me contacter",
+  },
+  {
+    title: "Automatisation du reporting de performance commercial supply chain",
+    context:
+      "Projet mené pendant mon alternance chez CBA Meubles pour automatiser sous VBA le reporting de performance commerciale supply chain.",
+    problem:
+      "La maintenance quotidienne du reporting demandait environ 1h30, avec un processus lourd et répétitif, initialement porté par seulement 1 à 2 utilisateurs.",
+    solution:
+      "Conception d'une automatisation VBA pour fiabiliser le reporting, réduire les manipulations manuelles et ouvrir le process à 5 utilisateurs : 1 skill head, 1 mid, 2 nouveaux utilisateurs et moi côté automatisation.",
+    result:
+      "Passage d'environ 1h30 de maintenance journalière à 30 à 50 minutes, soit un gain de temps de l'ordre de 45 à 65 % selon l'usage, avec un process plus transmissible et moins dépendant d'un nombre réduit de personnes.",
+    tools: ["VBA", "Reporting", "Performance commerciale", "Supply chain", "Transmission process"],
+    cta: "#contact",
+    ctaLabel: "Discuter du projet",
+  },
+  {
+    title: "Suivi des encours Van De Walle x Safran Seats",
+    context:
+      "Projet de stage centré sur le suivi des encours entre Van De Walle et Safran Seats, avec un besoin clair de visibilité et de fluidité dans les demandes.",
+    problem:
+      "Le flux dépendait trop d'échanges dispersés, avec une lecture insuffisante de l'état réel des demandes en cours.",
+    solution:
+      "Conception d'un outil de suivi permettant de créer, modifier, traiter et piloter les demandes dans une logique unique.",
+    result:
+      "Traçabilité renforcée des encours, meilleure visibilité sur l'avancement et centralisation des actions dans un même outil de suivi.",
+    tools: ["Google Sheets", "Apps Script", "Workflow metier", "Dashboard", "HTML/CSS"],
+    cta: "/projects/vandewalle-safran",
+    ctaLabel: "Voir le projet",
+    media: {
+      src: "/project-media/vandw-safran-dashboard.png",
+      alt: "Dashboard du projet encours Van De Walle x Safran Seats",
+    },
+  },
+  {
+    title: "Pilotage terrain, hygiene et stocks",
+    context:
+      "Projet universitaire conçu pour structurer un environnement de restauration solidaire avec suivi des bénéficiaires, distributions et stocks.",
+    problem: "Des données terrain utiles mais difficiles à consolider pour le pilotage quotidien.",
+    solution:
+      "Structuration des workflows autour des bénéficiaires, des distributions et de la gestion des stocks dans une interface claire.",
+    result:
+      "Vision plus lisible des opérations, navigation plus simple entre les modules et suivi plus cohérent.",
+    tools: ["Next.js", "Prisma", "SQLite", "Workflows metier", "Reporting"],
+    cta: "/projects/restaurants",
+    ctaLabel: "Voir le projet",
+    media: {
+      src: "/project-media/restaurants-dashboard.png",
+      alt: "Dashboard du projet universitaire restaurants",
+    },
+  },
+];
 
-export default function DashboardPage() {
-  const { user } = useAuth()
-  const [data, setData] = useState<StatsData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+const capabilities = [
+  "Business analysis",
+  "Supply chain",
+  "Forecasting",
+  "KPI et reporting",
+  "Structuration de la donnée",
+  "Automatisation",
+  "SQL",
+  "Power BI",
+  "Google Apps Script",
+  "Conception de processus",
+];
 
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const response = await fetch('/api/stats')
-        if (!response.ok) throw new Error('Erreur chargement')
-        const result = await response.json()
-        setData(result)
-      } catch (err) {
-        console.error('Stats fetch error:', err)
-        setError('Erreur lors du chargement des statistiques')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchStats()
-  }, [])
+const method = [
+  "Comprendre le besoin terrain et les points de friction",
+  "Structurer la donnée et clarifier les flux utiles",
+  "Concevoir une solution simple, exploitable et mesurable",
+  "Mesurer l'impact sur le temps, la fiabilité et la décision",
+];
 
-  // Use real data or fallback
-  const stats = data?.stats || {
-    beneficiaries: { total: 0, newThisMonth: 0, trend: '+0%' },
-    distributions: { total: 0, thisWeek: 0, trend: '+0%' },
-    stocks: { lowItems: 0, criticalItems: 0, totalProducts: 0 },
-    volunteers: { active: 0, thisMonth: 0 }
-  }
-
-  const weeklyDistributions = data?.weeklyDistributions || [
-    { day: 'Lun', count: 0 },
-    { day: 'Mar', count: 0 },
-    { day: 'Mer', count: 0 },
-    { day: 'Jeu', count: 0 },
-    { day: 'Ven', count: 0 },
-    { day: 'Sam', count: 0 },
-    { day: 'Dim', count: 0 },
-  ]
-
-  const maxDistributions = Math.max(...weeklyDistributions.map(d => d.count), 1)
-
-  const forecasts = {
-    nextWeekDistributions: data?.forecasts?.nextWeekDistributions || 0,
-    nextWeekBeneficiaries: data?.forecasts?.nextWeekBeneficiaries || 0,
-    stocksToOrder: data?.forecasts?.stocksToOrder || [],
-    monthlyTrend: [
-      { month: 'Oct', distributions: 120, beneficiaries: 310 },
-      { month: 'Nov', distributions: 135, beneficiaries: 325 },
-      { month: 'Déc', distributions: 148, beneficiaries: 335 },
-      { month: 'Jan', distributions: stats.distributions.total || 156, beneficiaries: stats.beneficiaries.total || 342 },
-      { month: 'Fév', distributions: Math.round((stats.distributions.total || 156) * 1.05), beneficiaries: Math.round((stats.beneficiaries.total || 342) * 1.05), forecast: true },
-      { month: 'Mar', distributions: Math.round((stats.distributions.total || 156) * 1.12), beneficiaries: Math.round((stats.beneficiaries.total || 342) * 1.09), forecast: true },
-    ]
-  }
-
-  const maxMonthly = Math.max(...forecasts.monthlyTrend.map(m => m.distributions))
-
-  const recentActivities = data?.recentActivities || []
-
-  const topProducts = data?.topProducts || []
-
-  // Skeleton loader component
-  const Skeleton = ({ width = '100%', height = '20px' }: { width?: string; height?: string }) => (
-    <div style={{
-      width,
-      height,
-      background: 'linear-gradient(90deg, var(--neutral-200) 25%, var(--neutral-100) 50%, var(--neutral-200) 75%)',
-      backgroundSize: '200% 100%',
-      animation: 'shimmer 1.5s infinite',
-      borderRadius: 'var(--radius-sm)'
-    }} />
-  )
-
+export default function HomePage() {
   return (
-    <div className="animate-fade-in">
-      {/* Welcome Header */}
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Bonjour, {user?.name?.split(' ')[0]} 👋</h1>
-          <p className="page-description">
-            Voici un aperçu de l&apos;activité de CoeurSolidaire aujourd&apos;hui
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Link href="/distributions/new" className="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: 18, height: 18 }}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Nouvelle distribution
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-4 mb-6">
-        <div className="stat-card stat-card-primary">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="stat-value">{stats.beneficiaries.total}</div>
-              <div className="stat-label">Bénéficiaires</div>
-            </div>
-            <span style={{
-              fontSize: '0.75rem',
-              padding: '2px 8px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--success-100)',
-              color: 'var(--success-700)',
-              fontWeight: 500
-            }}>
-              {stats.beneficiaries.trend}
-            </span>
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: 'var(--space-2)' }}>
-            +{stats.beneficiaries.newThisMonth} ce mois
-          </div>
-        </div>
-
-        <div className="stat-card stat-card-secondary">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="stat-value">{stats.distributions.thisWeek}</div>
-              <div className="stat-label">Distributions cette semaine</div>
-            </div>
-            <span style={{
-              fontSize: '0.75rem',
-              padding: '2px 8px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--success-100)',
-              color: 'var(--success-700)',
-              fontWeight: 500
-            }}>
-              {stats.distributions.trend}
-            </span>
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: 'var(--space-2)' }}>
-            {stats.distributions.total} ce mois
-          </div>
-        </div>
-
-        <div className="stat-card stat-card-warning">
-          <div className="stat-value">{stats.stocks.lowItems}</div>
-          <div className="stat-label">Stocks faibles</div>
-          {stats.stocks.criticalItems > 0 && (
-            <div style={{
-              fontSize: '0.75rem',
-              color: 'var(--error-600)',
-              marginTop: 'var(--space-2)',
-              fontWeight: 500
-            }}>
-              ⚠️ {stats.stocks.criticalItems} critique
-            </div>
-          )}
-        </div>
-
-        <div className="stat-card stat-card-success">
-          <div className="stat-value">{stats.volunteers.active}</div>
-          <div className="stat-label">Bénévoles actifs</div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: 'var(--space-2)' }}>
-            +{stats.volunteers.thisMonth} ce mois
-          </div>
-        </div>
-      </div>
-
-      {/* Forecasts Section */}
-      <div className="card mb-6" style={{
-        background: 'linear-gradient(135deg, var(--secondary-50), var(--primary-50))',
-        border: '1px solid var(--secondary-200)'
-      }}>
-        <div className="flex items-center gap-2 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="var(--secondary-600)" style={{ width: 24, height: 24 }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
-          </svg>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--secondary-800)' }}>
-            📊 Prévisions & Tendances
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-3 gap-6">
-          {/* Forecast Summary */}
-          <div>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: 'var(--space-3)', color: 'var(--foreground-muted)' }}>
-              Prévision semaine prochaine
-            </h3>
-            <div className="flex flex-col gap-3">
-              <div style={{
-                padding: 'var(--space-3)',
-                background: 'var(--surface)',
-                borderRadius: 'var(--radius-lg)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <span style={{ fontSize: '0.875rem' }}>📦 Distributions prévues</span>
-                <span style={{ fontWeight: 700, color: 'var(--secondary-600)', fontSize: '1.25rem' }}>
-                  ~{forecasts.nextWeekDistributions}
-                </span>
+    <main className="min-h-screen bg-[linear-gradient(180deg,#f7f5ef_0%,#f3f0e6_24%,#fcfbf7_58%,#ffffff_100%)] text-slate-900">
+      <div className="w-full px-4 pb-14 pt-3 sm:px-6 sm:pb-16 lg:px-8 lg:pb-20 xl:px-10 2xl:px-12">
+        <header className="sticky top-0 z-20 mb-6 rounded-[1.6rem] border border-slate-200/70 bg-white/90 px-4 py-4 shadow-[0_18px_44px_-28px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:px-5 lg:px-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-sm font-semibold tracking-[0.2em] text-white">
+                MD
               </div>
-              <div style={{
-                padding: 'var(--space-3)',
-                background: 'var(--surface)',
-                borderRadius: 'var(--radius-lg)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <span style={{ fontSize: '0.875rem' }}>👥 Nouveaux inscrits estimés</span>
-                <span style={{ fontWeight: 700, color: 'var(--primary-600)', fontSize: '1.25rem' }}>
-                  ~{forecasts.nextWeekBeneficiaries}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Monthly Trend Chart */}
-          <div>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: 'var(--space-3)', color: 'var(--foreground-muted)' }}>
-              Évolution mensuelle
-            </h3>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-2)', height: 100 }}>
-              {forecasts.monthlyTrend.map((month, idx) => (
-                <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div
-                    style={{
-                      width: '100%',
-                      height: `${(month.distributions / maxMonthly) * 70}px`,
-                      background: month.forecast
-                        ? 'repeating-linear-gradient(45deg, var(--secondary-300), var(--secondary-300) 2px, var(--secondary-400) 2px, var(--secondary-400) 4px)'
-                        : 'linear-gradient(180deg, var(--secondary-400), var(--secondary-600))',
-                      borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0',
-                      opacity: month.forecast ? 0.7 : 1,
-                      border: month.forecast ? '2px dashed var(--secondary-500)' : 'none'
-                    }}
-                  />
-                  <div style={{
-                    fontSize: '0.65rem',
-                    color: month.forecast ? 'var(--secondary-600)' : 'var(--foreground-muted)',
-                    marginTop: 'var(--space-1)',
-                    fontWeight: month.forecast ? 600 : 400
-                  }}>
-                    {month.month}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--foreground-muted)', marginTop: 'var(--space-2)', textAlign: 'center' }}>
-              <span style={{
-                display: 'inline-block',
-                width: 8,
-                height: 8,
-                background: 'var(--secondary-500)',
-                marginRight: 4,
-                borderRadius: 2
-              }}></span>
-              Réel
-              <span style={{
-                display: 'inline-block',
-                width: 8,
-                height: 8,
-                border: '2px dashed var(--secondary-500)',
-                marginLeft: 12,
-                marginRight: 4,
-                borderRadius: 2
-              }}></span>
-              Prévision
-            </div>
-          </div>
-
-          {/* Stock Needs */}
-          <div>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: 'var(--space-3)', color: 'var(--foreground-muted)' }}>
-              Besoins en stock estimés
-            </h3>
-            <div className="flex flex-col gap-2">
-              {forecasts.stocksToOrder.map((item, idx) => (
-                <div key={idx} style={{
-                  padding: 'var(--space-2) var(--space-3)',
-                  background: 'var(--surface)',
-                  borderRadius: 'var(--radius-md)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderLeft: `3px solid ${item.urgency === 'critical' ? 'var(--error-500)' : 'var(--warning-500)'}`
-                }}>
-                  <span style={{ fontSize: '0.875rem' }}>{item.name}</span>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      color: item.urgency === 'critical' ? 'var(--error-600)' : 'var(--warning-600)'
-                    }}>
-                      +{item.needed - item.current} unités
-                    </div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--foreground-muted)' }}>
-                      {item.current} → {item.needed}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid" style={{ gridTemplateColumns: '2fr 1fr', gap: 'var(--space-6)' }}>
-        {/* Left Column */}
-        <div className="flex flex-col gap-6">
-          {/* Weekly Chart */}
-          <div className="card">
-            <div className="flex justify-between items-center mb-4">
-              <h2 style={{ fontSize: '1.125rem', fontWeight: 600 }}>
-                Distributions cette semaine
-              </h2>
-              <span style={{ fontSize: '0.875rem', color: 'var(--foreground-muted)' }}>
-                Total: {weeklyDistributions.reduce((a, b) => a + b.count, 0)}
-              </span>
-            </div>
-
-            {/* Simple Bar Chart */}
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--space-3)', height: 160 }}>
-              {weeklyDistributions.map((day, idx) => (
-                <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    marginBottom: 'var(--space-1)',
-                    color: day.count === maxDistributions ? 'var(--primary-600)' : 'var(--foreground-muted)'
-                  }}>
-                    {day.count > 0 ? day.count : ''}
-                  </div>
-                  <div
-                    style={{
-                      width: '100%',
-                      height: `${(day.count / maxDistributions) * 120}px`,
-                      background: day.count === maxDistributions
-                        ? 'linear-gradient(180deg, var(--primary-400), var(--primary-600))'
-                        : 'linear-gradient(180deg, var(--secondary-300), var(--secondary-500))',
-                      borderRadius: 'var(--radius-md) var(--radius-md) 0 0',
-                      minHeight: day.count > 0 ? 8 : 0,
-                      transition: 'height 0.3s ease'
-                    }}
-                  />
-                  <div style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--foreground-muted)',
-                    marginTop: 'var(--space-2)'
-                  }}>
-                    {day.day}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Top Products */}
-          <div className="card">
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: 'var(--space-4)' }}>
-              Produits les plus distribués
-            </h2>
-            <div className="flex flex-col gap-3">
-              {topProducts.map((product, idx) => (
-                <div key={idx}>
-                  <div className="flex justify-between items-center mb-1">
-                    <div className="flex items-center gap-2">
-                      <span style={{
-                        width: 24,
-                        height: 24,
-                        borderRadius: 'var(--radius-md)',
-                        background: idx === 0 ? 'var(--primary-100)' : 'var(--neutral-100)',
-                        color: idx === 0 ? 'var(--primary-600)' : 'var(--foreground-muted)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.75rem',
-                        fontWeight: 600
-                      }}>
-                        {idx + 1}
-                      </span>
-                      <span style={{ fontWeight: 500 }}>{product.name}</span>
-                    </div>
-                    <span style={{ fontSize: '0.875rem', color: 'var(--foreground-muted)' }}>
-                      {product.count} distributions
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  Portfolio
+                </p>
+                <p className="mt-1 text-2xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-[2rem]">
+                  Merlin Debrais
+                </p>
+                <p className="mt-1 text-sm font-medium text-slate-600 sm:text-[15px]">
+                  Business Analyst | Supply Chain | Forecasting | Digitalisation
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-500 sm:text-xs">
+                  <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1">
+                    Valenciennes - Lille - Paris
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2.5 py-1">
+                    <span className="inline-flex h-5 min-w-[2rem] items-center justify-center rounded-full bg-slate-950 px-1.5 text-[10px] font-semibold tracking-[0.18em] text-white">
+                      INSA
                     </span>
-                  </div>
-                  <div className="progress" style={{ height: 6 }}>
-                    <div
-                      className="progress-bar"
-                      style={{
-                        width: `${product.percentage}%`,
-                        background: idx === 0
-                          ? 'linear-gradient(90deg, var(--primary-400), var(--primary-600))'
-                          : 'var(--secondary-400)'
-                      }}
+                    Master GPLA | Ingénierie de la chaîne logistique
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-slate-200 pt-3">
+              <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs">
+                <a
+                  href="#about"
+                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                >
+                  À propos
+                </a>
+                <a
+                  href="#projects"
+                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                >
+                  Projets
+                </a>
+                <a
+                  href="#tools"
+                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                >
+                  Outils
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5 fill-current">
+                    <path d="M4.98 3.5A2.48 2.48 0 1 0 5 8.46 2.48 2.48 0 0 0 4.98 3.5ZM3 9h4v12H3zm7 0h3.83v1.64h.06c.53-1 1.84-2.06 3.79-2.06C21.2 8.58 22 10.87 22 14.07V21h-4v-6.15c0-1.47-.03-3.36-2.05-3.36-2.05 0-2.36 1.6-2.36 3.25V21h-4z" />
+                  </svg>
+                  LinkedIn
+                </a>
+                <a
+                  href="mailto:merlin.debrais@gmail.com"
+                  className="inline-flex min-h-[40px] items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+                >
+                  Me contacter
+                </a>
+                <a
+                  href="/cv-merlin-debrais.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-[40px] items-center justify-center rounded-full bg-slate-950 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800"
+                >
+                  CV PDF
+                </a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section className="grid gap-6 pb-12 pt-5 xl:grid-cols-[1.2fr_0.8fr] xl:items-start xl:gap-8 xl:pb-16">
+          <div className="max-w-4xl">
+            <p className="mb-4 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
+              Profil hybride business + data + opérations
+            </p>
+            <h1 className="max-w-5xl text-[clamp(2.4rem,5vw,4.7rem)] font-semibold leading-[0.93] tracking-[-0.055em] text-slate-950">
+              Je transforme des besoins métiers en solutions concrètes pour la supply chain, la data et la décision.
+            </h1>
+            <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+              J&apos;analyse, structure et améliore les flux opérationnels pour rendre la donnée
+              plus fiable, les processus plus lisibles et la décision plus efficace.
+            </p>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
+              Business Analyst &amp; Forecaster Supply Chain en alternance chez CBA Meubles,
+              actuellement en Master Gestion de la production, logistique, achats à l&apos;INSA.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="#projects"
+                className="inline-flex items-center rounded-full bg-slate-950 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800"
+              >
+                Voir mes projets
+              </a>
+              <a
+                href="/cv-merlin-debrais.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-xs font-semibold text-slate-900 transition hover:border-slate-400 hover:bg-slate-50"
+              >
+                Télécharger mon CV
+              </a>
+            </div>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:max-w-3xl xl:grid-cols-4">
+              {impactStats.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-[1.35rem] border border-slate-200 bg-white/90 px-4 py-4 shadow-[0_16px_40px_-30px_rgba(15,23,42,0.22)]"
+                >
+                  <p className="text-xl font-semibold tracking-[-0.04em] text-slate-950">
+                    {item.value}
+                  </p>
+                  <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <aside className="rounded-[1.75rem] border border-slate-200 bg-white/78 p-5 shadow-[0_20px_50px_-34px_rgba(15,23,42,0.3)] backdrop-blur sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
+              Positionnement
+            </p>
+            <h2 className="mt-3 text-[1.55rem] font-semibold tracking-[-0.04em] text-slate-950 sm:text-[1.75rem]">
+              Entre terrain, pilotage et digitalisation.
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600">
+              Je conçois des outils utiles, pas des slides décoratives. Mon angle reste constant :
+              réduire la friction, fiabiliser l&apos;information et rendre l&apos;exécution plus
+              solide.
+            </p>
+            <div className="mt-5 space-y-3">
+              <div className="rounded-[1.1rem] border border-slate-200 bg-slate-50 px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Ce que je fais
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  Structurer les flux, fiabiliser la donnée, automatiser les tâches et rendre la
+                  décision plus exploitable.
+                </p>
+              </div>
+              <div className="rounded-[1.1rem] border border-slate-200 bg-slate-50 px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Comment
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  Analyse métier, outils de pilotage, automatisation, reporting, analytique et
+                  logique système.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section id="about" className="border-t border-slate-200/80 py-14 sm:py-16 lg:py-20">
+          <div className="mb-8 max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
+              À propos
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
+              De l&apos;analyse à l&apos;exécution.
+            </h2>
+          </div>
+
+          <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr] xl:items-start">
+            <div className="space-y-5 text-lg leading-8 text-slate-600">
+              <p>
+                Je développe des projets à la croisée de la supply chain, de la data et de
+                l&apos;automatisation. Mon objectif est simple : transformer des opérations
+                complexes en solutions concrètes, mesurables et utiles sur le terrain comme au
+                niveau décisionnel.
+              </p>
+              <p className="text-base leading-7 text-slate-500">
+                Mon angle n&apos;est pas de montrer une liste d&apos;outils. Je cherche à démontrer ma
+                capacité à comprendre un problème, structurer l&apos;information, concevoir un
+                système de pilotage et le traduire en exécution.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {method.map((step, index) => (
+                <div
+                  key={step}
+                  className="rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-[0_16px_50px_-32px_rgba(15,23,42,0.38)]"
+                >
+                  <p className="text-sm font-semibold text-sky-800">0{index + 1}</p>
+                  <p className="mt-3 text-base leading-7 text-slate-700">{step}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="projects" className="border-t border-slate-200/80 py-14 sm:py-16 lg:py-20">
+          <div className="mb-10 max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
+              Projets à impact
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
+              Projets concrets, résultats lisibles.
+            </h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">
+              Chaque projet est présenté avec le même fil conducteur : problème, solution,
+              résultat. L&apos;objectif est de montrer une logique de travail, pas d&apos;empiler des
+              captures.
+            </p>
+          </div>
+
+          <div className="grid gap-5 2xl:grid-cols-2">
+            {projects.map((project) => (
+              <article
+                key={project.title}
+                className={`overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_20px_70px_-40px_rgba(15,23,42,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_75px_-38px_rgba(15,23,42,0.32)] ${project.featured ? "2xl:col-span-2" : ""}`}
+              >
+                {project.media ? (
+                  <div className="group relative h-44 overflow-hidden border-b border-slate-200 bg-slate-100 sm:h-52 lg:h-56">
+                    <Image
+                      src={project.media.src}
+                      alt={project.media.alt}
+                      fill
+                      className="object-cover object-top transition-transform duration-300 ease-out group-hover:scale-[1.06]"
+                      sizes="(max-width: 1279px) 100vw, 50vw"
                     />
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                ) : null}
 
-        {/* Right Column */}
-        <div className="flex flex-col gap-6">
-          {/* Recent Activity */}
-          <div className="card">
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: 'var(--space-4)' }}>
-              Activité récente
-            </h2>
-            <div className="flex flex-col gap-4">
-              {recentActivities.map((activity, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    gap: 'var(--space-3)',
-                    paddingBottom: idx < recentActivities.length - 1 ? 'var(--space-3)' : 0,
-                    borderBottom: idx < recentActivities.length - 1 ? '1px solid var(--neutral-200)' : 'none'
-                  }}
-                >
-                  <div style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 'var(--radius-lg)',
-                    background: 'var(--neutral-100)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1rem',
-                    flexShrink: 0
-                  }}>
-                    {activity.icon}
+                <div className="p-6 sm:p-7">
+                  <h3 className="text-[1.38rem] font-semibold tracking-[-0.03em] text-slate-950 sm:text-[1.55rem]">
+                    {project.title}
+                  </h3>
+                  <p className="mt-3 text-[15px] leading-7 text-slate-600">{project.context}</p>
+
+                  <div className="mt-5 space-y-3.5 text-sm leading-7 text-slate-700">
+                    <p>
+                      <span className="font-semibold text-slate-950">Problème :</span>{" "}
+                      {project.problem}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-slate-950">Solution :</span>{" "}
+                      {project.solution}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-slate-950">Résultat :</span>{" "}
+                      {project.result}
+                    </p>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 500 }}>
-                      {activity.message}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)' }}>
-                      {activity.time}
-                    </div>
+
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {project.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-7 flex items-center justify-between gap-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                      {project.tools.length} briques clés
+                    </p>
+                    <a
+                      href={project.cta}
+                      className="inline-flex items-center rounded-full border border-slate-900 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-slate-950 hover:text-white"
+                    >
+                      {project.ctaLabel}
+                    </a>
                   </div>
                 </div>
-              ))}
-            </div>
-            <Link
-              href="/activity"
-              className="btn btn-ghost btn-sm w-full"
-              style={{ marginTop: 'var(--space-4)' }}
-            >
-              Voir tout l&apos;historique
-            </Link>
+              </article>
+            ))}
           </div>
+        </section>
 
-          {/* Quick Actions */}
-          <div className="card">
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: 'var(--space-4)' }}>
-              Actions rapides
+        <section
+          id="tools"
+          className="grid gap-8 border-t border-slate-200/80 py-14 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-20"
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
+              Outils
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
+              Une stack au service du résultat.
             </h2>
-            <div className="flex flex-col gap-2">
-              <Link href="/beneficiaries/new" className="btn btn-secondary btn-sm w-full" style={{ justifyContent: 'flex-start' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: 18, height: 18 }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-                </svg>
-                Nouveau bénéficiaire
-              </Link>
-              <Link href="/stocks/entry" className="btn btn-secondary btn-sm w-full" style={{ justifyContent: 'flex-start' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: 18, height: 18 }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-                </svg>
-                Entrée de stock
-              </Link>
-              <Link href="/campaigns/new" className="btn btn-secondary btn-sm w-full" style={{ justifyContent: 'flex-start' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: 18, height: 18 }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                </svg>
-                Nouvelle campagne
-              </Link>
-            </div>
           </div>
 
-          {/* Alerts */}
-          <div className="card" style={{
-            background: 'linear-gradient(135deg, var(--warning-50), var(--warning-100))',
-            border: '1px solid var(--warning-200)'
-          }}>
-            <div className="flex items-start gap-3">
-              <div style={{
-                width: 40,
-                height: 40,
-                borderRadius: 'var(--radius-lg)',
-                background: 'var(--warning-200)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--warning-700)'
-              }}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: 24, height: 24 }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                </svg>
-              </div>
+          <div className="flex flex-wrap gap-3">
+            {capabilities.map((capability) => (
+              <span
+                key={capability}
+                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_12px_36px_-28px_rgba(15,23,42,0.35)]"
+              >
+                {capability}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section id="contact" className="border-t border-slate-200/80 py-14 sm:py-16 lg:py-20">
+          <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 px-6 py-8 text-white shadow-[0_30px_90px_-45px_rgba(15,23,42,0.8)] sm:px-8 sm:py-10">
+            <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--warning-800)', marginBottom: 'var(--space-1)' }}>
-                  Alertes stocks
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">
+                  Contact
+                </p>
+                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
+                  Je recherche des opportunités où la data, les processus et la décision créent
+                  un avantage opérationnel concret.
+                </h2>
+              </div>
+
+              <div className="space-y-4 text-sm leading-7 text-slate-300">
+                <p>
+                  <span className="font-semibold text-white">Email :</span>{" "}
+                  <a className="transition hover:text-white" href="mailto:merlin.debrais@gmail.com">
+                    merlin.debrais@gmail.com
+                  </a>
+                </p>
+                <p>
+                  <span className="font-semibold text-white">CV :</span>{" "}
+                  <a
+                    className="transition hover:text-white"
+                    href="/cv-merlin-debrais.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Ouvrir le PDF
+                  </a>
+                </p>
+                <p>
+                  <span className="font-semibold text-white">LinkedIn :</span>{" "}
+                  <a
+                    className="transition hover:text-white"
+                    href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    merlin-debrais-141b03226
+                  </a>
+                </p>
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <a
+                    href="mailto:merlin.debrais@gmail.com"
+                    className="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-200"
+                  >
+                    Envoyer un email
+                  </a>
+                  <a
+                    href="/cv-merlin-debrais.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/8"
+                  >
+                    Consulter le CV
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/8"
+                  >
+                    Voir LinkedIn
+                  </a>
                 </div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--warning-700)' }}>
-                  3 produits ont un stock faible et nécessitent un réapprovisionnement
-                </div>
-                <Link
-                  href="/stocks?status=low"
-                  style={{
-                    fontSize: '0.875rem',
-                    color: 'var(--warning-800)',
-                    fontWeight: 500,
-                    marginTop: 'var(--space-2)',
-                    display: 'inline-block'
-                  }}
-                >
-                  Voir les détails →
-                </Link>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
-  )
+    </main>
+  );
 }
+

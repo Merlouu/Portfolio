@@ -1,5 +1,5 @@
 {
-  "name": "coeursolidaire",
+  "name": "portfolio-vitrine",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -36,6 +36,6 @@
     "prisma-dbml-generator": "^0.12.0",
     "prisma-erd-generator": "^2.4.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "5.9.3"
   }
 }

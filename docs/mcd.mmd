@@ -1,0 +1,108 @@
+erDiagram
+    CENTER {
+        String id PK
+        String name
+    }
+    USER {
+        String id PK
+        String email
+        String role
+        String centerId FK
+    }
+    BENEFICIARY {
+        String id PK
+        String name
+        Int pointsBalance
+        String centerId FK
+        String userId FK
+    }
+    CAMPAIGN {
+        String id PK
+        String name
+        String centerId FK
+    }
+    REGISTRATION {
+        String id PK
+        String status
+        String beneficiaryId FK
+        String campaignId FK
+    }
+    PRODUCT {
+        String id PK
+        String name
+        Int pointsCost
+        String categoryId FK
+    }
+    PRODUCTCATEGORY {
+        String id PK
+        String name
+    }
+    STOCK {
+        String id PK
+        Float quantity
+        String centerId FK
+        String productId FK
+    }
+    LOT {
+        String id PK
+        String batchNumber
+        DateTime expiryDate
+        String productId FK
+        String stockId FK
+    }
+    STOCKMOVEMENT {
+        String id PK
+        String type
+        Float quantity
+        String lotId FK
+        String stockId FK
+    }
+    DISTRIBUTION {
+        String id PK
+        Int totalPoints
+        String beneficiaryId FK
+        String centerId FK
+    }
+    DISTRIBUTIONITEM {
+        String id PK
+        Float quantity
+        String distributionId FK
+        String productId FK
+    }
+    OVENLOG {
+        String id PK
+        String ovenName
+    }
+    TEMPERATURELOG {
+        String id PK
+        Float temperature
+    }
+
+    %% Relations
+    CENTER ||--o{ USER : "emploie"
+    CENTER ||--o{ CAMPAIGN : "gere"
+    CENTER ||--o{ STOCK : "contient"
+    CENTER ||--o{ BENEFICIARY : "accueille"
+    CENTER ||--o{ DISTRIBUTION : "effectue"
+    CENTER ||--o{ OVENLOG : "enregistre"
+    CENTER ||--o{ TEMPERATURELOG : "releve"
+    
+    USER ||--o{ STOCKMOVEMENT : "realise"
+    USER ||--o{ DISTRIBUTION : "supervise"
+    USER |o--o| BENEFICIARY : "correspond_a"
+
+    CAMPAIGN ||--o{ REGISTRATION : "concerne"
+    BENEFICIARY ||--o{ REGISTRATION : "soumet"
+    BENEFICIARY ||--o{ DISTRIBUTION : "recoit"
+    
+    PRODUCTCATEGORY ||--o{ PRODUCT : "categorise"
+    PRODUCT ||--o{ STOCK : "possede"
+    PRODUCT ||--o{ LOT : "trace"
+    PRODUCT ||--o{ DISTRIBUTIONITEM : "compose"
+    
+    STOCK ||--o{ LOT : "est_divise_en"
+    STOCK ||--o{ STOCKMOVEMENT : "subit"
+    LOT ||--o{ STOCKMOVEMENT : "trace_par"
+    
+    DISTRIBUTION ||--|{ DISTRIBUTIONITEM : "inclut"
+    DISTRIBUTION ||--o{ STOCKMOVEMENT : "declenche"
