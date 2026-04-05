@@ -20,6 +20,10 @@
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
+  "optionalDependencies": {
+    "@next/swc-linux-x64-gnu": "16.1.6",
+    "@next/swc-linux-x64-musl": "16.1.6"
+  },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^11.12.0",
     "@prisma/client": "5.22.0",
