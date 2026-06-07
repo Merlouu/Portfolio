@@ -147,21 +147,57 @@ const capabilities = [
   "Conception produit",
 ];
 
-const roadmap = [
+const journey = [
   {
-    step: "Aujourd'hui",
-    title: "Fiabiliser les opérations",
-    text: "Business analysis, forecasting et outils de pilotage supply chain dans un environnement industriel.",
+    date: "2022 — 2025",
+    logo: "IUT",
+    logoClass: "bg-blue-700 text-white",
+    type: "Formation",
+    title: "BUT Management de la logistique et des transports",
+    organization: "IUT d'Orléans",
+    text: "Parcours Supply Chain connectée · diplôme Bac+3.",
   },
   {
-    step: "En développement",
-    title: "Construire des produits data",
-    text: "CarrerJob AI, systèmes d'aide à la décision et automatisations full-stack centrées sur l'usage.",
+    date: "2023 — 2025",
+    logo: "EXP",
+    logoClass: "bg-slate-800 text-white",
+    type: "Expériences",
+    title: "Immersion, gestion d'entrepôt et digitalisation",
+    organization: "Hutchinson · MNH · Transports Van De Walle",
+    text: "Découverte des opérations, expression des besoins ERP, optimisation des flux et outil collaboratif avec Safran Seats.",
   },
   {
-    step: "Demain",
-    title: "Élargir l'impact",
-    text: "Évoluer vers la transformation digitale, les data products et l'IA appliquée aux opérations.",
+    date: "2025 — aujourd'hui",
+    logo: "CBA",
+    logoClass: "bg-[#173f72] text-white",
+    type: "Alternance",
+    title: "Business Analyst & Forecaster Supply Chain",
+    organization: "CBA Meubles",
+    text: "Forecasting, MRP, analyses portefeuille, automatisation et pilotage de la performance.",
+  },
+  {
+    date: "2025 — 2027",
+    logo: "INSA",
+    logoClass: "bg-red-700 text-white",
+    type: "Formation",
+    title: "Master GPLA · Ingénierie de la chaîne logistique",
+    organization: "INSA Hauts-de-France",
+    text: "Bac+4 en cours · entrée en année Bac+5 en septembre 2026.",
+  },
+];
+
+const futureRoadmap = [
+  {
+    date: "Septembre 2026",
+    status: "En attente",
+    title: "Apprenti Ingénieur Data · Industrie 4.0",
+    text: "Objectif : approfondir la data industrielle, l'automatisation et les systèmes de décision appliqués aux opérations.",
+  },
+  {
+    date: "Septembre 2027",
+    status: "Ouvert aux projets",
+    title: "France · Union européenne · Monde",
+    text: "Business analysis, supply chain data, transformation digitale, data products et performance opérationnelle.",
   },
 ];
 
@@ -199,7 +235,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="font-semibold tracking-[-0.02em] text-slate-950">Merlin Debrais</p>
-                <p className="text-xs text-slate-500">Business Analyst · Supply Chain · Data</p>
+                <p className="text-xs text-slate-500">Étudiant INSA · Business Analyst · Supply Chain Data</p>
               </div>
             </div>
 
@@ -228,9 +264,33 @@ export default function HomePage() {
               Je transforme la donnée en décisions et outils opérationnels.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
-              Business Analyst &amp; Forecaster Supply Chain en alternance. Je structure les flux,
-              automatise les analyses et construis des solutions utiles aux équipes.
+              Étudiant en Ingénierie de la chaîne logistique à l&apos;INSA Hauts-de-France,
+              actuellement en Bac+4 et Business Analyst &amp; Forecaster Supply Chain en alternance.
             </p>
+            <div className="mt-5 grid max-w-2xl gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-800">
+                  Aujourd&apos;hui
+                </p>
+                <p className="mt-2 text-sm font-semibold text-slate-950">
+                  Master GPLA · Bac+4
+                </p>
+                <p className="mt-1 text-xs leading-5 text-slate-500">
+                  INSA Hauts-de-France · Ingénierie de la chaîne logistique
+                </p>
+              </div>
+              <div className="rounded-2xl border border-red-100 bg-red-50/70 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-red-700">
+                  Septembre 2026
+                </p>
+                <p className="mt-2 text-sm font-semibold text-slate-950">
+                  Entrée en Bac+5
+                </p>
+                <p className="mt-1 text-xs leading-5 text-slate-500">
+                  Deuxième année du Master · diplomation prévue en 2027
+                </p>
+              </div>
+            </div>
             <div className="mt-7 flex flex-wrap gap-3">
               <a href="#projects" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
                 Voir mes projets
@@ -366,24 +426,87 @@ export default function HomePage() {
         </section>
 
         <section id="roadmap" className="border-t border-slate-200/80 py-12 sm:py-16">
-          <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">
+          <div className="grid gap-8 lg:grid-cols-[0.3fr_0.7fr]">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-800">Roadmap</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-800">
+                Parcours &amp; roadmap
+              </p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-slate-950 sm:text-4xl">
-                La direction que je construis.
+                D&apos;où je viens, où je vais.
               </h2>
               <p className="mt-4 text-sm leading-6 text-slate-500">
-                Une progression cohérente entre expertise métier, produits data et transformation.
+                Une trajectoire entre logistique, supply chain, data et transformation industrielle.
               </p>
+              <a
+                href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 inline-flex rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:border-slate-400"
+              >
+                Parcours complet sur LinkedIn
+              </a>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {roadmap.map((item, index) => (
-                <article key={item.step} className="rounded-[1.4rem] border border-slate-200 bg-white p-5">
-                  <p className="text-xs font-semibold text-sky-800">0{index + 1} · {item.step}</p>
-                  <h3 className="mt-3 text-lg font-semibold tracking-[-0.025em] text-slate-950">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
-                </article>
-              ))}
+
+            <div>
+              <div className="grid gap-3">
+                {journey.map((item) => (
+                  <article
+                    key={`${item.date}-${item.title}`}
+                    className="grid gap-4 rounded-[1.35rem] border border-slate-200 bg-white p-4 sm:grid-cols-[64px_1fr_auto] sm:items-center"
+                  >
+                    <div
+                      className={`flex h-14 w-14 items-center justify-center rounded-2xl text-[11px] font-bold tracking-[0.08em] shadow-sm ${item.logoClass}`}
+                      aria-hidden="true"
+                    >
+                      {item.logo}
+                    </div>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-sky-800">
+                          {item.type}
+                        </span>
+                        <span className="text-xs text-slate-400">{item.organization}</span>
+                      </div>
+                      <h3 className="mt-1 font-semibold tracking-[-0.02em] text-slate-950">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-6 text-slate-500">{item.text}</p>
+                    </div>
+                    <p className="text-xs font-semibold text-slate-500 sm:text-right">{item.date}</p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="mt-6">
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Prochaines étapes
+                </p>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {futureRoadmap.map((item) => (
+                    <article
+                      key={item.date}
+                      className="rounded-[1.4rem] border border-slate-200 bg-slate-950 p-5 text-white"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p className="text-xs font-semibold text-sky-300">{item.date}</p>
+                        <span
+                          className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+                            item.status === "En attente"
+                              ? "bg-amber-300/15 text-amber-200"
+                              : "bg-emerald-300/15 text-emerald-200"
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </div>
+                      <h3 className="mt-4 text-lg font-semibold tracking-[-0.025em]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
