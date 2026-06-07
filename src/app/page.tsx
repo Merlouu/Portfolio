@@ -1,133 +1,138 @@
-﻿import Image from "next/image";
-
+import Image from "next/image";
 import Link from "next/link";
 
+type Project = {
+  title: string;
+  category: "Professionnel" | "Personnel" | "Universitaire";
+  status: string;
+  summary: string;
+  role: string;
+  impact: string;
+  tools: string[];
+  href: string;
+  image?: { src: string; alt: string };
+  confidential?: boolean;
+  featured?: boolean;
+};
+
 const impactStats = [
-  { value: "500+", label: "références pilotées en prévision mensuelle" },
-  { value: "1 300+", label: "références suivies pour la fiabilisation MRP" },
-  { value: "-65%", label: "temps de maintenance réduit sur un reporting VBA" },
-  { value: "6", label: "univers projets présentés de bout en bout" },
+  { value: "500+", label: "références pilotées en prévision" },
+  { value: "1 300+", label: "références suivies pour le MRP" },
+  { value: "-65%", label: "de maintenance sur un reporting" },
 ];
 
-const projects = [
+const projects: Project[] = [
   {
-    featured: true,
-    title: "CarrerJob AI — copilote de recherche d'emploi",
-    context:
-      "Application full-stack conçue pour réunir compréhension du profil, préférences, recherche d'offres et préparation des candidatures.",
-    problem:
-      "Le parcours candidat est fragmenté entre CV, moteurs de recherche, comparaison des offres et rédaction répétitive de contenus.",
-    solution:
-      "Création d'un workflow assisté par IA : analyse PDF/DOCX, enrichissement avec le portfolio, préférences conversationnelles, scoring sémantique et génération de candidature.",
-    result:
-      "Un espace candidat cohérent qui priorise les opportunités et accélère la personnalisation, avec validation humaine avant toute soumission.",
-    tools: ["React", "FastAPI", "Supabase", "Anthropic API", "Render", "Vercel"],
-    cta: "/projects/carrerjob",
-    ctaLabel: "Découvrir CarrerJob",
-    media: {
+    title: "CarrerJob AI",
+    category: "Personnel",
+    status: "MVP full-stack",
+    summary:
+      "Un copilote carrière qui analyse le profil, recueille les préférences, score les offres et prépare des candidatures personnalisées.",
+    role: "Conception produit, architecture full-stack et workflow IA.",
+    impact: "Un parcours unifié du CV à la candidature, avec validation humaine.",
+    tools: ["React", "FastAPI", "Supabase", "Anthropic API"],
+    href: "/projects/carrerjob",
+    image: {
       src: "/project-media/carrerjob-offres.png",
-      alt: "Interface candidat de CarrerJob AI",
+      alt: "Offres recommandées dans CarrerJob AI",
     },
+    featured: true,
   },
   {
-    title: "Pilotage de la disponibilité produit fini et du taux de service",
-    context:
-      "Projet d'alternance construit pour suivre chaque semaine les carnets de commandes, les stocks et la capacité à répondre aux demandes sur trois horizons.",
-    problem:
-      "Les équipes avaient besoin d'une lecture anticipée et traçable de la disponibilité, du volume répondable et du service rendu aux principaux clients.",
-    solution:
-      "Archivage hebdomadaire, imports Power Query, filtres de périmètre, projections S/S+1/S+2 par article, consolidation globale et calcul du taux de service du Top 5 clients issu de la facturation N-1.",
-    result:
-      "Un pilotage actualisable en moins de 15 minutes, avec vues globales, classes produits et clients, corrélé aux capacités de stock disponibles.",
-    tools: ["Power Query", "Stocks", "Commandes", "S / S+1 / S+2", "Taux de service", "Traçabilité"],
-    cta: "/projects/disponibilite-produit-fini",
-    ctaLabel: "Voir le cas anonymisé",
-    media: {
+    title: "Disponibilité produit fini & taux de service",
+    category: "Professionnel",
+    status: "Outil opérationnel",
+    summary:
+      "Un pilotage hebdomadaire des commandes, stocks et capacités de réponse sur la semaine en cours, S+1 et S+2.",
+    role: "Cadrage métier, Power Query, calculs, filtres et reporting.",
+    impact:
+      "Actualisation en moins de 15 minutes avec vues articles, classes produits, global et Top 5 clients.",
+    tools: ["Power Query", "Forecasting", "Stocks", "Taux de service"],
+    href: "/projects/disponibilite-produit-fini",
+    image: {
       src: "/project-media/cba-disponibilite-dashboard.svg",
       alt: "Dashboard anonymisé de disponibilité produit fini",
     },
-    privacyLabel: "Données anonymisées",
+    confidential: true,
+    featured: true,
   },
   {
-    title: "Système de trading supervisé et aide à la décision",
-    context:
-      "Projet construit en deux temps : un socle initial sur Google Sheets, puis un système plus structuré pour stocker, analyser, exécuter et superviser.",
-    problem:
-      "La première version fonctionnait, mais demandait trop d'entretien et restait difficile à lire entre donnée, signal, ordre et supervision.",
-    solution:
-      "Construction d'une console unifiée avec base de données, analytique et scoring IA, exécution automatique, contrôle du risque, supervision et maintenance assistée.",
-    result:
-      "Lecture plus nette du marché, décisions mieux tracées, exécution automatique plus lisible et système plus facile à surveiller et faire évoluer.",
-    tools: ["Algo trading", "BDD", "IA", "Backtesting", "Détection d'anomalies", "Supervision"],
-    cta: "/projects/finance",
-    ctaLabel: "Voir le projet",
-    media: {
+    title: "Système de trading supervisé",
+    category: "Personnel",
+    status: "En développement",
+    summary:
+      "Une console pour centraliser la donnée de marché, l'analyse, l'exécution automatique, le risque et la supervision.",
+    role: "Architecture fonctionnelle, automatisation et aide à la décision.",
+    impact: "Une chaîne plus lisible entre donnée, signal, ordre et suivi.",
+    tools: ["BDD", "IA", "Backtesting", "Supervision"],
+    href: "/projects/finance",
+    image: {
       src: "/project-media/finance-home-auto-traders.png",
-      alt: "Accueil Auto Traders du projet finance",
+      alt: "Console du projet finance",
     },
+    featured: true,
   },
   {
-    title: "Analyses supply chain et pilotage décisionnel chez CBA Meubles",
-    context:
-      "Travaux menés pendant mon alternance chez CBA Meubles, dans un environnement supply chain avec besoin d'outils de décision plus fiables sur la prévision, les stocks, les clients et les signaux marché.",
-    problem:
-      "Plusieurs sujets restaient dispersés ou traités manuellement : stocks morts, archivage, suivi automatisé, contrôle des prix clients et arbitrage des demandes de prévision.",
-    solution:
-      "Développement d'analyses ciblées et d'outils de pilotage sur les stocks morts, l'archivage et le suivi automatisé des stocks, le scraping des prix clients avec alertes promotions, et l'analyse des clients sur leur CA N-1 pour filtrer les demandes de prévision.",
-    result:
-      "Pilotage rendu plus lisible sur 500+ références en prévision mensuelle et 1 300+ références suivies, avec des arbitrages davantage fondés sur la donnée et le poids réel des clients ou des articles.",
-    tools: ["Forecasting", "MRP", "Stocks", "API", "Alertes", "Analyse client"],
-    cta: "#contact",
-    ctaLabel: "Me contacter",
+    title: "Analyses supply chain & pilotage décisionnel",
+    category: "Professionnel",
+    status: "Alternance",
+    summary:
+      "Prévision, stocks morts, suivi automatisé, alertes prix et analyse du portefeuille clients.",
+    role: "Business analysis, forecasting et conception d'outils de pilotage.",
+    impact: "500+ références pilotées et 1 300+ références suivies.",
+    tools: ["Forecasting", "MRP", "Stocks", "Analyse client"],
+    href: "#contact",
   },
   {
-    title: "Automatisation du reporting de performance commercial supply chain",
-    context:
-      "Projet mené pendant mon alternance chez CBA Meubles pour automatiser sous VBA le reporting de performance commerciale supply chain.",
-    problem:
-      "La maintenance quotidienne du reporting demandait environ 1h30, avec un processus lourd et répétitif, initialement porté par seulement 1 à 2 utilisateurs.",
-    solution:
-      "Conception d'une automatisation VBA pour fiabiliser le reporting, réduire les manipulations manuelles et ouvrir le process à 5 utilisateurs : 1 skill head, 1 mid, 2 nouveaux utilisateurs et moi côté automatisation.",
-    result:
-      "Passage d'environ 1h30 de maintenance journalière à 30 à 50 minutes, soit un gain de temps de l'ordre de 45 à 65 % selon l'usage, avec un process plus transmissible et moins dépendant d'un nombre réduit de personnes.",
-    tools: ["VBA", "Reporting", "Performance commerciale", "Supply chain", "Transmission process"],
-    cta: "#contact",
-    ctaLabel: "Discuter du projet",
+    title: "Automatisation du reporting supply chain",
+    category: "Professionnel",
+    status: "Alternance",
+    summary:
+      "Automatisation VBA d'un reporting de performance commerciale auparavant lourd à maintenir.",
+    role: "Développement, fiabilisation et transmission du processus.",
+    impact: "Maintenance ramenée de 1h30 à 30-50 minutes et usage étendu à 5 personnes.",
+    tools: ["VBA", "Reporting", "Automatisation"],
+    href: "#contact",
   },
   {
-    title: "Suivi des encours Van De Walle x Safran Seats",
-    context:
-      "Projet de stage centré sur le suivi des encours entre Van De Walle et Safran Seats, avec un besoin clair de visibilité et de fluidité dans les demandes.",
-    problem:
-      "Le flux dépendait trop d'échanges dispersés, avec une lecture insuffisante de l'état réel des demandes en cours.",
-    solution:
-      "Conception d'un outil de suivi permettant de créer, modifier, traiter et piloter les demandes dans une logique unique.",
-    result:
-      "Traçabilité renforcée des encours, meilleure visibilité sur l'avancement et centralisation des actions dans un même outil de suivi.",
-    tools: ["Google Sheets", "Apps Script", "Workflow metier", "Dashboard", "HTML/CSS"],
-    cta: "/projects/vandewalle-safran",
-    ctaLabel: "Voir le projet",
-    media: {
-      src: "/project-media/vandw-safran-dashboard.png",
-      alt: "Dashboard du projet encours Van De Walle x Safran Seats",
-    },
+    title: "Suivi des encours Van De Walle × Safran Seats",
+    category: "Professionnel",
+    status: "Stage",
+    summary:
+      "Un outil unique pour créer, modifier, traiter et suivre les demandes en cours.",
+    role: "Cadrage, conception fonctionnelle et développement.",
+    impact: "Davantage de visibilité, de traçabilité et de fluidité dans le traitement.",
+    tools: ["Apps Script", "Google Sheets", "Workflow"],
+    href: "/projects/vandewalle-safran",
   },
   {
-    title: "Pilotage terrain, hygiene et stocks",
-    context:
-      "Projet universitaire conçu pour structurer un environnement de restauration solidaire avec suivi des bénéficiaires, distributions et stocks.",
-    problem: "Des données terrain utiles mais difficiles à consolider pour le pilotage quotidien.",
-    solution:
-      "Structuration des workflows autour des bénéficiaires, des distributions et de la gestion des stocks dans une interface claire.",
-    result:
-      "Vision plus lisible des opérations, navigation plus simple entre les modules et suivi plus cohérent.",
-    tools: ["Next.js", "Prisma", "SQLite", "Workflows metier", "Reporting"],
-    cta: "/projects/restaurants",
-    ctaLabel: "Voir le projet",
-    media: {
-      src: "/project-media/restaurants-dashboard.png",
-      alt: "Dashboard du projet universitaire restaurants",
-    },
+    title: "Pilotage terrain, hygiène & stocks",
+    category: "Universitaire",
+    status: "Projet universitaire",
+    summary:
+      "Une application de gestion des bénéficiaires, distributions, contrôles et stocks.",
+    role: "Structuration des données, workflows et tableaux de bord.",
+    impact: "Une vision cohérente des opérations et des responsabilités.",
+    tools: ["Next.js", "Prisma", "SQLite"],
+    href: "/projects/restaurants",
+  },
+];
+
+const projectGroups = [
+  {
+    name: "Professionnels",
+    description: "Des outils utilisés pour fiabiliser les opérations et la décision.",
+    projects: projects.filter((project) => project.category === "Professionnel"),
+  },
+  {
+    name: "Personnels",
+    description: "Des produits construits pour explorer l'IA, la data et l'automatisation.",
+    projects: projects.filter((project) => project.category === "Personnel"),
+  },
+  {
+    name: "Universitaire",
+    description: "Un projet collectif pour structurer des opérations terrain.",
+    projects: projects.filter((project) => project.category === "Universitaire"),
   },
 ];
 
@@ -135,424 +140,285 @@ const capabilities = [
   "Business analysis",
   "Supply chain",
   "Forecasting",
-  "KPI et reporting",
-  "Structuration de la donnée",
-  "Automatisation",
+  "KPI & reporting",
+  "Power Query / Power BI",
   "SQL",
-  "Power BI",
-  "Google Apps Script",
-  "Conception de processus",
+  "Automatisation",
+  "Conception produit",
 ];
 
-const method = [
-  "Comprendre le besoin terrain et les points de friction",
-  "Structurer la donnée et clarifier les flux utiles",
-  "Concevoir une solution simple, exploitable et mesurable",
-  "Mesurer l'impact sur le temps, la fiabilité et la décision",
+const roadmap = [
+  {
+    step: "Aujourd'hui",
+    title: "Fiabiliser les opérations",
+    text: "Business analysis, forecasting et outils de pilotage supply chain dans un environnement industriel.",
+  },
+  {
+    step: "En développement",
+    title: "Construire des produits data",
+    text: "CarrerJob AI, systèmes d'aide à la décision et automatisations full-stack centrées sur l'usage.",
+  },
+  {
+    step: "Demain",
+    title: "Élargir l'impact",
+    text: "Évoluer vers la transformation digitale, les data products et l'IA appliquée aux opérations.",
+  },
 ];
+
+function ProjectLink({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className: string;
+}) {
+  return href.startsWith("/") ? (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  ) : (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  );
+}
 
 export default function HomePage() {
+  const featuredProjects = projects.filter((project) => project.featured);
+
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#f7f5ef_0%,#f3f0e6_24%,#fcfbf7_58%,#ffffff_100%)] text-slate-900">
-      <div className="w-full px-4 pb-14 pt-3 sm:px-6 sm:pb-16 lg:px-8 lg:pb-20 xl:px-10 2xl:px-12">
-        <header className="mb-5 rounded-[1.35rem] border border-slate-200/70 bg-white/90 px-4 py-3 shadow-[0_18px_44px_-28px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:sticky sm:top-0 sm:z-20 sm:mb-6 sm:px-5 sm:py-4 lg:px-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-start gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-sm font-semibold tracking-[0.2em] text-white">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-14 pt-3 sm:px-6 lg:px-8 xl:px-10">
+        <header className="mb-6 rounded-[1.35rem] border border-slate-200/70 bg-white/90 px-4 py-3 shadow-[0_18px_44px_-28px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:sticky sm:top-0 sm:z-20 sm:px-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 text-xs font-semibold tracking-[0.18em] text-white">
                 MD
               </div>
-              <div className="min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-                  Portfolio
-                </p>
-                <p className="mt-1 text-[1.45rem] font-semibold tracking-[-0.04em] text-slate-950 sm:text-[2rem]">
-                  Merlin Debrais
-                </p>
-                <p className="mt-1 text-[13px] font-medium text-slate-600 sm:text-[15px]">
-                  Business Analyst | Supply Chain | Forecasting | Digitalisation
-                </p>
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-500 sm:text-xs">
-                  <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1">
-                    Valenciennes - Lille - Paris
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2.5 py-1">
-                    <span className="inline-flex h-5 min-w-[2rem] items-center justify-center rounded-full bg-slate-950 px-1.5 text-[10px] font-semibold tracking-[0.18em] text-white">
-                      INSA
-                    </span>
-                    Master GPLA | Ingénierie de la chaîne logistique
-                  </span>
-                </div>
+              <div>
+                <p className="font-semibold tracking-[-0.02em] text-slate-950">Merlin Debrais</p>
+                <p className="text-xs text-slate-500">Business Analyst · Supply Chain · Data</p>
               </div>
             </div>
 
-            <div className="border-t border-slate-200 pt-3">
-              <div className="flex flex-wrap items-center gap-1.5 text-[11px] sm:gap-2 sm:text-xs">
-                <a
-                  href="#about"
-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-3.5 sm:py-2"
-                >
-                  À propos
-                </a>
-                <a
-                  href="#projects"
-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-3.5 sm:py-2"
-                >
-                  Projets
-                </a>
-                <a
-                  href="#tools"
-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-3.5 sm:py-2"
-                >
-                  Outils
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-[36px] items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-[11px] font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-4 sm:py-2.5 sm:text-xs"
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5 fill-current">
-                    <path d="M4.98 3.5A2.48 2.48 0 1 0 5 8.46 2.48 2.48 0 0 0 4.98 3.5ZM3 9h4v12H3zm7 0h3.83v1.64h.06c.53-1 1.84-2.06 3.79-2.06C21.2 8.58 22 10.87 22 14.07V21h-4v-6.15c0-1.47-.03-3.36-2.05-3.36-2.05 0-2.36 1.6-2.36 3.25V21h-4z" />
-                  </svg>
-                  LinkedIn
-                </a>
-                <a
-                  href="mailto:merlin.debrais@gmail.com"
-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full border border-slate-200 bg-white px-3.5 py-2 text-[11px] font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:min-h-[40px] sm:px-4 sm:py-2.5 sm:text-xs"
-                >
-                  Me contacter
-                </a>
-                <a
-                  href="/cv-merlin-debrais.pdf"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-[36px] items-center justify-center rounded-full bg-slate-950 px-3.5 py-2 text-[11px] font-semibold text-white transition hover:bg-slate-800 sm:min-h-[40px] sm:px-4 sm:py-2.5 sm:text-xs"
-                >
-                  CV PDF
-                </a>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <section className="grid gap-5 pb-10 pt-4 sm:pb-12 sm:pt-5 xl:grid-cols-[1.2fr_0.8fr] xl:items-start xl:gap-8 xl:pb-16">
-          <div className="max-w-4xl">
-            <p className="mb-4 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
-              Profil hybride business + data + opérations
-            </p>
-            <h1 className="max-w-5xl text-[clamp(2rem,5vw,4.7rem)] font-semibold leading-[0.95] tracking-[-0.055em] text-slate-950">
-              Je transforme des besoins métiers en solutions concrètes pour la supply chain, la data et la décision.
-            </h1>
-            <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
-              J&apos;analyse, structure et améliore les flux opérationnels pour rendre la donnée
-              plus fiable, les processus plus lisibles et la décision plus efficace.
-            </p>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
-              Business Analyst &amp; Forecaster Supply Chain en alternance chez CBA Meubles,
-              actuellement en Master Gestion de la production, logistique, achats à l&apos;INSA.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="#projects"
-                className="inline-flex items-center rounded-full bg-slate-950 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800"
-              >
-                Voir mes projets
-              </a>
+            <nav className="flex flex-wrap items-center gap-2 text-xs" aria-label="Navigation principale">
+              <a href="#projects" className="rounded-full px-3 py-2 font-medium text-slate-600 hover:bg-slate-100">Projets</a>
+              <a href="#roadmap" className="rounded-full px-3 py-2 font-medium text-slate-600 hover:bg-slate-100">Roadmap</a>
+              <a href="#contact" className="rounded-full px-3 py-2 font-medium text-slate-600 hover:bg-slate-100">Contact</a>
               <a
                 href="/cv-merlin-debrais.pdf"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-2.5 text-xs font-semibold text-slate-900 transition hover:border-slate-400 hover:bg-slate-50"
+                className="rounded-full bg-slate-950 px-4 py-2.5 font-semibold text-white hover:bg-slate-800"
               >
-                Télécharger mon CV
+                CV PDF
+              </a>
+            </nav>
+          </div>
+        </header>
+
+        <section className="grid gap-8 pb-14 pt-6 xl:grid-cols-[1.08fr_0.92fr] xl:items-center xl:pb-20">
+          <div>
+            <p className="inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-800">
+              Business + data + opérations
+            </p>
+            <h1 className="mt-5 max-w-5xl text-[clamp(2.5rem,5.4vw,5.4rem)] font-semibold leading-[0.94] tracking-[-0.06em] text-slate-950">
+              Je transforme la donnée en décisions et outils opérationnels.
+            </h1>
+            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+              Business Analyst &amp; Forecaster Supply Chain en alternance. Je structure les flux,
+              automatise les analyses et construis des solutions utiles aux équipes.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a href="#projects" className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
+                Voir mes projets
+              </a>
+              <a href="mailto:merlin.debrais@gmail.com" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:border-slate-400">
+                Me contacter
               </a>
             </div>
-
-            <div className="mt-7 grid gap-2.5 sm:grid-cols-2 xl:max-w-3xl xl:grid-cols-4">
+            <div className="mt-8 grid max-w-3xl gap-3 sm:grid-cols-3">
               {impactStats.map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-[1.15rem] border border-slate-200 bg-white/90 px-3.5 py-3.5 shadow-[0_16px_40px_-30px_rgba(15,23,42,0.22)] sm:rounded-[1.35rem] sm:px-4 sm:py-4"
-                >
-                  <p className="text-xl font-semibold tracking-[-0.04em] text-slate-950">
-                    {item.value}
-                  </p>
-                  <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.label}</p>
+                <div key={item.label} className="rounded-2xl border border-slate-200 bg-white/90 p-4">
+                  <p className="text-2xl font-semibold tracking-[-0.04em] text-slate-950">{item.value}</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-500">{item.label}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <aside className="overflow-hidden rounded-[1.4rem] border border-slate-800 bg-slate-950 p-3 text-white shadow-[0_28px_70px_-34px_rgba(15,23,42,0.65)] sm:rounded-[1.75rem] sm:p-4">
+          <Link href="/projects/carrerjob" className="group overflow-hidden rounded-[1.75rem] border border-slate-800 bg-slate-950 p-3 text-white shadow-[0_30px_80px_-38px_rgba(15,23,42,0.7)]">
             <div className="flex items-center justify-between gap-4 px-2 pb-3 pt-1">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-300">
-                  Nouveau projet
-                </p>
-                <h2 className="mt-1 text-lg font-semibold tracking-[-0.03em]">CarrerJob AI</h2>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-orange-300">Projet à découvrir</p>
+                <h2 className="mt-1 text-lg font-semibold">CarrerJob AI</h2>
               </div>
-              <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-[10px] font-semibold text-slate-200">
-                Full-stack + IA
-              </span>
+              <span className="rounded-full border border-white/15 px-3 py-1 text-[10px] text-slate-300">MVP full-stack</span>
             </div>
-
-            <Link
-              href="/projects/carrerjob"
-              className="group relative block aspect-[8/5] overflow-hidden rounded-[1.15rem] border border-white/10 bg-slate-900"
-            >
+            <div className="relative aspect-[8/5] overflow-hidden rounded-[1.2rem]">
               <Image
                 src="/project-media/carrerjob-offres.png"
-                alt="Aperçu des offres recommandées dans CarrerJob AI"
+                alt="Offres recommandées dans CarrerJob AI"
                 fill
                 priority
-                className="object-cover transition duration-500 group-hover:scale-[1.035]"
-                sizes="(max-width: 1279px) 100vw, 40vw"
+                className="object-cover transition duration-500 group-hover:scale-[1.025]"
+                sizes="(max-width: 1279px) 100vw, 42vw"
               />
-              <span className="absolute bottom-3 right-3 rounded-full bg-white px-3 py-2 text-[11px] font-semibold text-slate-950 shadow-lg">
-                Voir le cas projet
-              </span>
-            </Link>
-
-            <div className="grid gap-2.5 pt-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-              {[
-                ["01", "Comprendre", "CV + portfolio"],
-                ["02", "Prioriser", "Offres scorées"],
-                ["03", "Personnaliser", "Candidatures"],
-              ].map(([index, title, detail]) => (
-                <div key={index} className="rounded-2xl border border-white/10 bg-white/[0.055] p-3">
-                  <p className="text-[10px] font-semibold text-orange-300">{index}</p>
-                  <p className="mt-1 text-xs font-semibold text-white">{title}</p>
-                  <p className="mt-1 text-[11px] text-slate-400">{detail}</p>
-                </div>
-              ))}
             </div>
-          </aside>
+            <p className="px-2 pb-2 pt-4 text-sm leading-6 text-slate-300">
+              Comprendre le profil, prioriser les offres et préparer une candidature personnalisée.
+            </p>
+          </Link>
         </section>
 
-        <section id="about" className="border-t border-slate-200/80 py-11 sm:py-16 lg:py-20">
-          <div className="mb-8 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
-              À propos
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-              De l&apos;analyse à l&apos;exécution.
-            </h2>
-          </div>
-
-          <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr] xl:items-start">
-            <div className="space-y-5 text-lg leading-8 text-slate-600">
-              <p>
-                Je développe des projets à la croisée de la supply chain, de la data et de
-                l&apos;automatisation. Mon objectif est simple : transformer des opérations
-                complexes en solutions concrètes, mesurables et utiles sur le terrain comme au
-                niveau décisionnel.
-              </p>
-              <p className="text-base leading-7 text-slate-500">
-                Mon angle n&apos;est pas de montrer une liste d&apos;outils. Je cherche à démontrer ma
-                capacité à comprendre un problème, structurer l&apos;information, concevoir un
-                système de pilotage et le traduire en exécution.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {method.map((step, index) => (
-                <div
-                  key={step}
-                  className="rounded-3xl border border-slate-200 bg-white px-5 py-5 shadow-[0_16px_50px_-32px_rgba(15,23,42,0.38)]"
-                >
-                  <p className="text-sm font-semibold text-sky-800">0{index + 1}</p>
-                  <p className="mt-3 text-base leading-7 text-slate-700">{step}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="projects" className="border-t border-slate-200/80 py-11 sm:py-16 lg:py-20">
-          <div className="mb-10 max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
-              Projets à impact
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-              Projets concrets, résultats lisibles.
+        <section id="projects" className="border-t border-slate-200/80 py-12 sm:py-16">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-800">Sélection</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-slate-950 sm:text-4xl">
+              Trois cas qui résument ma manière de travailler.
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-600">
-              Chaque projet est présenté avec le même fil conducteur : problème, solution,
-              résultat. L&apos;objectif est de montrer une logique de travail, pas d&apos;empiler des
-              captures.
+              Comprendre le besoin, structurer les données, construire puis mesurer l&apos;impact.
             </p>
           </div>
 
-          <div className="grid gap-5 2xl:grid-cols-2">
-            {projects.map((project) => (
-              <article
-                key={project.title}
-                className={`overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_20px_70px_-40px_rgba(15,23,42,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_75px_-38px_rgba(15,23,42,0.32)] ${project.featured ? "2xl:col-span-2" : ""}`}
-              >
-                {project.media ? (
-                  <div className="group relative h-44 overflow-hidden border-b border-slate-200 bg-slate-100 sm:h-52 lg:h-56">
-                    <Image
-                      src={project.media.src}
-                      alt={project.media.alt}
-                      fill
-                      className="object-cover object-top transition-transform duration-300 ease-out group-hover:scale-[1.06]"
-                      sizes="(max-width: 1279px) 100vw, 50vw"
-                    />
-                    {"privacyLabel" in project && project.privacyLabel ? (
-                      <span className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-900 shadow-sm backdrop-blur">
-                        {project.privacyLabel}
+          <div className="mt-9 grid gap-5 xl:grid-cols-3">
+            {featuredProjects.map((project) => (
+              <article key={project.title} className="overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white shadow-[0_22px_60px_-42px_rgba(15,23,42,0.35)]">
+                {project.image ? (
+                  <div className="relative h-48 overflow-hidden border-b border-slate-200 bg-slate-100">
+                    <Image src={project.image.src} alt={project.image.alt} fill className="object-cover object-top" sizes="(max-width: 1279px) 100vw, 33vw" />
+                    {project.confidential ? (
+                      <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-900">
+                        Données anonymisées
                       </span>
                     ) : null}
                   </div>
                 ) : null}
-
-                <div className="p-5 sm:p-7">
-                  <h3 className="text-[1.38rem] font-semibold tracking-[-0.03em] text-slate-950 sm:text-[1.55rem]">
-                    {project.title}
-                  </h3>
-                  <p className="mt-3 text-[15px] leading-7 text-slate-600">{project.context}</p>
-
-                  <div className="mt-5 space-y-3.5 text-sm leading-7 text-slate-700">
-                    <p>
-                      <span className="font-semibold text-slate-950">Problème :</span>{" "}
-                      {project.problem}
-                    </p>
-                    <p>
-                      <span className="font-semibold text-slate-950">Solution :</span>{" "}
-                      {project.solution}
-                    </p>
-                    <p>
-                      <span className="font-semibold text-slate-950">Résultat :</span>{" "}
-                      {project.result}
-                    </p>
+                <div className="p-5">
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.13em]">
+                    <span className="text-sky-800">{project.category}</span>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-500">{project.status}</span>
                   </div>
-
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {project.tools.map((tool) => (
-                      <span
-                        key={tool}
-                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700"
-                      >
-                        {tool}
-                      </span>
+                  <h3 className="mt-3 text-xl font-semibold tracking-[-0.03em] text-slate-950">{project.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{project.summary}</p>
+                  <dl className="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm leading-6">
+                    <div>
+                      <dt className="font-semibold text-slate-950">Mon rôle</dt>
+                      <dd className="text-slate-600">{project.role}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-slate-950">Impact</dt>
+                      <dd className="text-slate-600">{project.impact}</dd>
+                    </div>
+                  </dl>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {project.tools.slice(0, 3).map((tool) => (
+                      <span key={tool} className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-700">{tool}</span>
                     ))}
                   </div>
-
-                  <div className="mt-7 flex items-center justify-between gap-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                      {project.tools.length} briques clés
-                    </p>
-                    <a
-                      href={project.cta}
-                      className="inline-flex items-center rounded-full border border-slate-900 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-slate-950 hover:text-white"
-                    >
-                      {project.ctaLabel}
-                    </a>
-                  </div>
+                  <ProjectLink href={project.href} className="mt-6 inline-flex rounded-full border border-slate-900 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-slate-950 hover:text-white">
+                    Voir le projet
+                  </ProjectLink>
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        <section
-          id="tools"
-          className="grid gap-6 border-t border-slate-200/80 py-11 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-20"
-        >
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-800">
-              Outils
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">
-              Une stack au service du résultat.
+        <section className="border-t border-slate-200/80 py-12 sm:py-16">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-800">Tous les projets</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-slate-950 sm:text-4xl">
+              Une lecture claire par contexte.
             </h2>
           </div>
-
-          <div className="flex flex-wrap gap-3">
-            {capabilities.map((capability) => (
-              <span
-                key={capability}
-                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_12px_36px_-28px_rgba(15,23,42,0.35)]"
-              >
-                {capability}
-              </span>
+          <div className="space-y-10">
+            {projectGroups.map((group) => (
+              <div key={group.name} className="grid gap-5 lg:grid-cols-[0.28fr_0.72fr]">
+                <div>
+                  <h3 className="text-xl font-semibold text-slate-950">{group.name}</h3>
+                  <p className="mt-2 max-w-xs text-sm leading-6 text-slate-500">{group.description}</p>
+                </div>
+                <div className="grid gap-3">
+                  {group.projects.map((project) => (
+                    <ProjectLink key={project.title} href={project.href} className="group grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-[0_18px_50px_-38px_rgba(15,23,42,0.35)] sm:grid-cols-[1fr_auto] sm:items-center">
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h4 className="font-semibold text-slate-950">{project.title}</h4>
+                          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-medium text-slate-500">{project.status}</span>
+                          {project.confidential ? (
+                            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-medium text-emerald-800">Anonymisé</span>
+                          ) : null}
+                        </div>
+                        <p className="mt-1 text-sm leading-6 text-slate-500">{project.impact}</p>
+                      </div>
+                      <span className="text-xs font-semibold text-slate-500 transition group-hover:text-slate-950">Ouvrir →</span>
+                    </ProjectLink>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>
 
-        <section id="contact" className="border-t border-slate-200/80 py-11 sm:py-16 lg:py-20">
-          <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-950 px-5 py-7 text-white shadow-[0_30px_90px_-45px_rgba(15,23,42,0.8)] sm:rounded-[2rem] sm:px-8 sm:py-10">
-            <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">
-                  Contact
-                </p>
-                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-                  Je recherche des opportunités où la data, les processus et la décision créent
-                  un avantage opérationnel concret.
-                </h2>
-              </div>
-
-              <div className="space-y-4 text-sm leading-7 text-slate-300">
-                <p>
-                  <span className="font-semibold text-white">Email :</span>{" "}
-                  <a className="transition hover:text-white" href="mailto:merlin.debrais@gmail.com">
-                    merlin.debrais@gmail.com
-                  </a>
-                </p>
-                <p>
-                  <span className="font-semibold text-white">CV :</span>{" "}
-                  <a
-                    className="transition hover:text-white"
-                    href="/cv-merlin-debrais.pdf"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Ouvrir le PDF
-                  </a>
-                </p>
-                <p>
-                  <span className="font-semibold text-white">LinkedIn :</span>{" "}
-                  <a
-                    className="transition hover:text-white"
-                    href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    merlin-debrais-141b03226
-                  </a>
-                </p>
-                <div className="flex flex-wrap gap-4 pt-2">
-                  <a
-                    href="mailto:merlin.debrais@gmail.com"
-                    className="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-200"
-                  >
-                    Envoyer un email
-                  </a>
-                  <a
-                    href="/cv-merlin-debrais.pdf"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/8"
-                  >
-                    Consulter le CV
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/merlin-debrais-141b03226/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/8"
-                  >
-                    Voir LinkedIn
-                  </a>
-                </div>
-              </div>
+        <section id="roadmap" className="border-t border-slate-200/80 py-12 sm:py-16">
+          <div className="grid gap-8 lg:grid-cols-[0.35fr_0.65fr]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-800">Roadmap</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-slate-950 sm:text-4xl">
+                La direction que je construis.
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-slate-500">
+                Une progression cohérente entre expertise métier, produits data et transformation.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {roadmap.map((item, index) => (
+                <article key={item.step} className="rounded-[1.4rem] border border-slate-200 bg-white p-5">
+                  <p className="text-xs font-semibold text-sky-800">0{index + 1} · {item.step}</p>
+                  <h3 className="mt-3 text-lg font-semibold tracking-[-0.025em] text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
+                </article>
+              ))}
             </div>
           </div>
+        </section>
+
+        <section className="grid gap-6 border-t border-slate-200/80 py-12 lg:grid-cols-[0.35fr_0.65fr]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-800">Compétences</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-slate-950">Les moyens, pas la finalité.</h2>
+          </div>
+          <div className="flex flex-wrap content-start gap-2.5">
+            {capabilities.map((capability) => (
+              <span key={capability} className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700">{capability}</span>
+            ))}
+          </div>
+        </section>
+
+        <section id="contact" className="border-t border-slate-200/80 py-12 sm:py-16">
+          <div className="grid gap-8 rounded-[1.75rem] bg-slate-950 px-6 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">Contact</p>
+              <h2 className="mt-3 max-w-3xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
+                Parlons supply chain, data et transformation opérationnelle.
+              </h2>
+              <p className="mt-4 text-sm text-slate-400">Valenciennes · Lille · Paris</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a href="mailto:merlin.debrais@gmail.com" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-200">Envoyer un email</a>
+              <a href="https://www.linkedin.com/in/merlin-debrais-141b03226/" target="_blank" rel="noreferrer" className="rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">LinkedIn</a>
+            </div>
+          </div>
+          <p className="mt-4 text-center text-[11px] text-slate-400">
+            Portfolio mis à jour en juin 2026 · Les cas sensibles sont anonymisés.
+          </p>
         </section>
       </div>
     </main>
   );
 }
-

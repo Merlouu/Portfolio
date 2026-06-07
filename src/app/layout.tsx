@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Portfolio | Business Analyst & Forecaster Supply Chain",
+  title: "Merlin Debrais | Business Analyst, Supply Chain & Data",
   description:
-    "Portfolio professionnel pour accompagner un CV de Business Analyst et Forecaster Supply Chain, avec des projets qui mettent en avant analyse, pilotage et structuration de données.",
+    "Portfolio de Merlin Debrais : business analysis, supply chain, forecasting, data et automatisation.",
 };
 
 export default function RootLayout({
