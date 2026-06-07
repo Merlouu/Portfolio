@@ -87,6 +87,18 @@ export default function ProjectPage({ project }: { project: ProjectContent }) {
             Accueil
           </Link>
           <Link
+            href="/projects/carrerjob"
+            className={`nav-link ${project.slug === "carrerjob" ? "is-active" : ""}`}
+          >
+            CarrerJob
+          </Link>
+          <Link
+            href="/projects/disponibilite-produit-fini"
+            className={`nav-link ${project.slug === "disponibilite-produit-fini" ? "is-active" : ""}`}
+          >
+            Disponibilité
+          </Link>
+          <Link
             href="/projects/finance"
             className={`nav-link ${project.slug === "finance" ? "is-active" : ""}`}
           >
@@ -441,6 +453,19 @@ export default function ProjectPage({ project }: { project: ProjectContent }) {
                 ];
                 const activeIndex = galleryIndexes[galleryId] ?? 0;
                 const activeGalleryImage = allImages[activeIndex];
+                const galleryDescriptionParts = item.description
+                  .split(". ")
+                  .map((part) => part.trim())
+                  .filter(Boolean)
+                  .map((part) => (part.endsWith(".") ? part : `${part}.`));
+                const galleryDescriptionPreview =
+                  isFinance && group.title === "Projet finance actuel"
+                    ? galleryDescriptionParts.slice(0, 1)
+                    : galleryDescriptionParts;
+                const galleryDescriptionDetails =
+                  isFinance && group.title === "Projet finance actuel"
+                    ? galleryDescriptionParts.slice(1)
+                    : [];
 
                 return (
                   <article key={item.title} className="gallery-card">
@@ -502,7 +527,21 @@ export default function ProjectPage({ project }: { project: ProjectContent }) {
                     </div>
                     <div className="gallery-copy">
                       <h3>{normalizedTitle}</h3>
-                      <p>{item.description}</p>
+                      <div className="gallery-text-block">
+                        {galleryDescriptionPreview.map((sentence) => (
+                          <p key={sentence}>{sentence}</p>
+                        ))}
+                        {galleryDescriptionDetails.length ? (
+                          <details className="gallery-copy-details">
+                            <summary>Voir le détail</summary>
+                            <div className="gallery-copy-detail-text">
+                              {galleryDescriptionDetails.map((sentence) => (
+                                <p key={sentence}>{sentence}</p>
+                              ))}
+                            </div>
+                          </details>
+                        ) : null}
+                      </div>
                     </div>
                   </article>
                 );

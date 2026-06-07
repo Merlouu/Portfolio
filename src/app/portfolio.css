@@ -914,6 +914,30 @@ a {
   line-height: 1.5;
 }
 
+.gallery-text-block {
+  display: grid;
+  gap: 4px;
+}
+
+.gallery-copy-details {
+  margin-top: 4px;
+}
+
+.gallery-copy-details summary {
+  cursor: pointer;
+  color: var(--text);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.gallery-copy-detail-text {
+  display: grid;
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .showcase-copy p:last-child,
 .gallery-copy p,
 .spotlight-copy p {
@@ -1356,6 +1380,24 @@ a {
   background:
     radial-gradient(circle at top right, rgba(159, 227, 196, 0.14), transparent 24%),
     linear-gradient(160deg, #0d1b18, #0d1715 60%, #142622);
+}
+
+.theme-career {
+  --accent: #ffb08d;
+  --accent-2: #cf6e49;
+  --accent-3: rgba(207, 110, 73, 0.28);
+}
+
+.theme-career .project-hero-copy,
+.theme-career .project-hero-card,
+.theme-career .project-link-card,
+.theme-career .showcase-card,
+.theme-career .gallery-card,
+.theme-career .spotlight-card {
+  border-color: rgba(255, 176, 141, 0.18);
+  background:
+    linear-gradient(180deg, rgba(207, 110, 73, 0.08), transparent 38%),
+    rgba(9, 16, 28, 0.9);
 }
 
 .gallery-group-head .section-note,

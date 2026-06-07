@@ -1,14 +1,54 @@
 ﻿import Image from "next/image";
 
+import Link from "next/link";
+
 const impactStats = [
   { value: "500+", label: "références pilotées en prévision mensuelle" },
   { value: "1 300+", label: "références suivies pour la fiabilisation MRP" },
   { value: "-65%", label: "temps de maintenance réduit sur un reporting VBA" },
+  { value: "6", label: "univers projets présentés de bout en bout" },
 ];
 
 const projects = [
   {
     featured: true,
+    title: "CarrerJob AI — copilote de recherche d'emploi",
+    context:
+      "Application full-stack conçue pour réunir compréhension du profil, préférences, recherche d'offres et préparation des candidatures.",
+    problem:
+      "Le parcours candidat est fragmenté entre CV, moteurs de recherche, comparaison des offres et rédaction répétitive de contenus.",
+    solution:
+      "Création d'un workflow assisté par IA : analyse PDF/DOCX, enrichissement avec le portfolio, préférences conversationnelles, scoring sémantique et génération de candidature.",
+    result:
+      "Un espace candidat cohérent qui priorise les opportunités et accélère la personnalisation, avec validation humaine avant toute soumission.",
+    tools: ["React", "FastAPI", "Python", "LLM", "Matching", "Human-in-the-loop"],
+    cta: "/projects/carrerjob",
+    ctaLabel: "Découvrir CarrerJob",
+    media: {
+      src: "/project-media/carrerjob-dashboard.svg",
+      alt: "Interface candidat de CarrerJob AI",
+    },
+  },
+  {
+    title: "Pilotage de la disponibilité produit fini et du taux de service",
+    context:
+      "Projet d'alternance construit pour suivre chaque semaine les carnets de commandes, les stocks et la capacité à répondre aux demandes sur trois horizons.",
+    problem:
+      "Les équipes avaient besoin d'une lecture anticipée et traçable de la disponibilité, du volume répondable et du service rendu aux principaux clients.",
+    solution:
+      "Archivage hebdomadaire, imports Power Query, filtres de périmètre, projections S/S+1/S+2 par article, consolidation globale et calcul du taux de service du Top 5 clients issu de la facturation N-1.",
+    result:
+      "Un pilotage actualisable en moins de 15 minutes, avec vues globales, classes produits et clients, corrélé aux capacités de stock disponibles.",
+    tools: ["Power Query", "Stocks", "Commandes", "S / S+1 / S+2", "Taux de service", "Traçabilité"],
+    cta: "/projects/disponibilite-produit-fini",
+    ctaLabel: "Voir le cas anonymisé",
+    media: {
+      src: "/project-media/cba-disponibilite-dashboard.svg",
+      alt: "Dashboard anonymisé de disponibilité produit fini",
+    },
+    privacyLabel: "Données anonymisées",
+  },
+  {
     title: "Système de trading supervisé et aide à la décision",
     context:
       "Projet construit en deux temps : un socle initial sur Google Sheets, puis un système plus structuré pour stocker, analyser, exécuter et superviser.",
@@ -244,37 +284,48 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="rounded-[1.4rem] border border-slate-200 bg-white/78 p-4 shadow-[0_20px_50px_-34px_rgba(15,23,42,0.3)] backdrop-blur sm:rounded-[1.75rem] sm:p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-800">
-              Positionnement
-            </p>
-            <h2 className="mt-3 text-[1.55rem] font-semibold tracking-[-0.04em] text-slate-950 sm:text-[1.75rem]">
-              Entre terrain, pilotage et digitalisation.
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-slate-600">
-              Je conçois des outils utiles, pas des slides décoratives. Mon angle reste constant :
-              réduire la friction, fiabiliser l&apos;information et rendre l&apos;exécution plus
-              solide.
-            </p>
-            <div className="mt-5 space-y-3">
-              <div className="rounded-[1.1rem] border border-slate-200 bg-slate-50 px-4 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  Ce que je fais
+          <aside className="overflow-hidden rounded-[1.4rem] border border-slate-800 bg-slate-950 p-3 text-white shadow-[0_28px_70px_-34px_rgba(15,23,42,0.65)] sm:rounded-[1.75rem] sm:p-4">
+            <div className="flex items-center justify-between gap-4 px-2 pb-3 pt-1">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-300">
+                  Nouveau projet
                 </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  Structurer les flux, fiabiliser la donnée, automatiser les tâches et rendre la
-                  décision plus exploitable.
-                </p>
+                <h2 className="mt-1 text-lg font-semibold tracking-[-0.03em]">CarrerJob AI</h2>
               </div>
-              <div className="rounded-[1.1rem] border border-slate-200 bg-slate-50 px-4 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  Comment
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  Analyse métier, outils de pilotage, automatisation, reporting, analytique et
-                  logique système.
-                </p>
-              </div>
+              <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-[10px] font-semibold text-slate-200">
+                Full-stack + IA
+              </span>
+            </div>
+
+            <Link
+              href="/projects/carrerjob"
+              className="group relative block aspect-[8/5] overflow-hidden rounded-[1.15rem] border border-white/10 bg-slate-900"
+            >
+              <Image
+                src="/project-media/carrerjob-dashboard.svg"
+                alt="Aperçu du dashboard CarrerJob AI"
+                fill
+                priority
+                className="object-cover transition duration-500 group-hover:scale-[1.035]"
+                sizes="(max-width: 1279px) 100vw, 40vw"
+              />
+              <span className="absolute bottom-3 right-3 rounded-full bg-white px-3 py-2 text-[11px] font-semibold text-slate-950 shadow-lg">
+                Voir le cas projet
+              </span>
+            </Link>
+
+            <div className="grid gap-2.5 pt-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+              {[
+                ["01", "Comprendre", "CV + portfolio"],
+                ["02", "Prioriser", "Offres scorées"],
+                ["03", "Personnaliser", "Candidatures"],
+              ].map(([index, title, detail]) => (
+                <div key={index} className="rounded-2xl border border-white/10 bg-white/[0.055] p-3">
+                  <p className="text-[10px] font-semibold text-orange-300">{index}</p>
+                  <p className="mt-1 text-xs font-semibold text-white">{title}</p>
+                  <p className="mt-1 text-[11px] text-slate-400">{detail}</p>
+                </div>
+              ))}
             </div>
           </aside>
         </section>
@@ -348,6 +399,11 @@ export default function HomePage() {
                       className="object-cover object-top transition-transform duration-300 ease-out group-hover:scale-[1.06]"
                       sizes="(max-width: 1279px) 100vw, 50vw"
                     />
+                    {"privacyLabel" in project && project.privacyLabel ? (
+                      <span className="absolute left-4 top-4 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-900 shadow-sm backdrop-blur">
+                        {project.privacyLabel}
+                      </span>
+                    ) : null}
                   </div>
                 ) : null}
 

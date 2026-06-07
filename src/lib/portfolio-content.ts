@@ -8,7 +8,7 @@
   role: string;
   audience: string;
   heroNote: string;
-  palette: "finance" | "restaurants" | "industry";
+  palette: "finance" | "restaurants" | "industry" | "career";
   metrics: { value: string; label: string }[];
   pillars: { title: string; description: string }[];
   architecture: { title: string; description: string }[];
@@ -105,6 +105,233 @@ export const profileContent = {
 };
 
 export const projects: ProjectContent[] = [
+  {
+    slug: "disponibilite-produit-fini",
+    name: "Disponibilité produit fini & taux de service",
+    shortLabel: "Supply chain",
+    tagline:
+      "Un outil de pilotage hebdomadaire pour projeter la disponibilité par article, mesurer le taux de service et mettre la demande en regard des capacités de stock.",
+    summary:
+      "Projet réalisé en alternance dans un environnement industriel, présenté avec des données entièrement anonymisées. L'outil archive chaque lundi les carnets de commandes et les stocks, applique les filtres du périmètre étudié, puis projette les volumes demandés, répondus et les taux de disponibilité sur la semaine en cours, S+1 et S+2. Une seconde lecture identifie les cinq principaux clients à partir de la facturation N-1 et calcule leur taux de service à partir de la disponibilité des articles demandés.",
+    challenge:
+      "Donner une vision fiable et anticipée de la capacité à répondre aux commandes, depuis l'article jusqu'au portefeuille client, malgré des sources et des périmètres de données multiples.",
+    role:
+      "Cadrage métier, import Power Query, historisation, traitement des paramètres, définition des filtres, calcul des projections et conception du reporting.",
+    audience:
+      "Équipes supply chain et décideurs ayant besoin d'anticiper les tensions entre commandes, disponibilité produit fini et capacité des stocks.",
+    heroNote:
+      "Les données, clients et valeurs sont anonymisés. La présentation porte uniquement sur la méthode, les indicateurs et l'architecture du pilotage.",
+    palette: "industry",
+    metrics: [
+      { value: "< 15 min", label: "Temps nécessaire pour actualiser l'ensemble du fichier." },
+      { value: "3 horizons", label: "Semaine en cours, S+1 et S+2 suivies dans la même lecture." },
+      { value: "Top 5", label: "Clients identifiés depuis la facturation N-1 pour le taux de service." },
+    ],
+    pillars: [
+      {
+        title: "Archiver chaque semaine",
+        description:
+          "Conserver chaque lundi un état daté des carnets de commandes et des stocks afin de fiabiliser les comparaisons et la traçabilité.",
+      },
+      {
+        title: "Projeter la disponibilité",
+        description:
+          "Calculer par article les volumes demandés, les volumes répondus et le taux de disponibilité sur S, S+1 et S+2.",
+      },
+      {
+        title: "Consolider les lectures",
+        description:
+          "Produire des indicateurs globaux et par classe de produits pour repérer les écarts et les tensions à venir.",
+      },
+      {
+        title: "Mesurer le service client",
+        description:
+          "Relier chaque demande des principaux clients au taux de disponibilité des articles concernés pour obtenir un taux de service individuel et global.",
+      },
+    ],
+    architecture: [
+      {
+        title: "Imports Power Query",
+        description:
+          "Les carnets de commandes, stocks et tables de facturation sont importés et préparés dans un flux d'actualisation reproductible.",
+      },
+      {
+        title: "Paramètres et périmètre",
+        description:
+          "Des paramètres et filtres isolent les types de commandes utiles à l'évaluation et sécurisent la cohérence du scope analysé.",
+      },
+      {
+        title: "Moteur de calcul",
+        description:
+          "Les quantités demandées et répondables sont rapprochées par article et par horizon pour calculer disponibilité et service.",
+      },
+      {
+        title: "Restitution multi-niveaux",
+        description:
+          "Les graphiques présentent le global, les classes produits, le Top 5, puis chaque client avec ses volumes et taux sur les trois horizons.",
+      },
+    ],
+    flow: {
+      title: "Chaîne de calcul hebdomadaire",
+      description:
+        "Une chaîne courte et traçable, depuis l'archive source jusqu'aux indicateurs de service.",
+      steps: [
+        { label: "Archive", detail: "Photographie datée des commandes et stocks chaque lundi." },
+        { label: "Import", detail: "Chargement et transformation des sources avec Power Query." },
+        { label: "Filtrage", detail: "Application des paramètres définissant le périmètre de commandes." },
+        { label: "Projection", detail: "Calcul des volumes et disponibilités sur S, S+1 et S+2." },
+        { label: "Clients", detail: "Identification du Top 5 depuis la facturation N-1." },
+        { label: "Pilotage", detail: "Restitution des taux de service et comparaison aux capacités de stock." },
+      ],
+    },
+    outcomes: [
+      "Une vision anticipée de la disponibilité produit fini par article et par classe de produits.",
+      "Une mesure globale des volumes demandés, répondus et des taux associés sur trois horizons.",
+      "Un taux de service calculé pour chacun des principaux clients et pour leur portefeuille global.",
+      "Une mise en corrélation de la demande client avec les capacités de stock disponibles.",
+      "Une actualisation complète en moins de quinze minutes avec conservation de la traçabilité.",
+    ],
+    stack: [
+      "Excel",
+      "Power Query",
+      "Carnet de commandes",
+      "Stocks",
+      "Facturation N-1",
+      "Forecasting",
+      "Taux de disponibilité",
+      "Taux de service",
+      "Data visualisation",
+    ],
+    spotlight: {
+      title: "Une lecture à trois horizons de la demande, de la réponse et du service",
+      description:
+        "Le tableau de bord rapproche les commandes, les stocks et les clients pour rendre les risques de disponibilité visibles avant qu'ils ne deviennent opérationnels.",
+      image: "/project-media/cba-disponibilite-dashboard.svg",
+      imageAlt: "Dashboard anonymisé de disponibilité produit fini et taux de service",
+    },
+    gallery: [
+      {
+        title: "Dashboard de pilotage anonymisé",
+        description:
+          "Une représentation illustrative des vues globales, produits et clients. Aucune donnée métier réelle n'est exposée.",
+        image: "/project-media/cba-disponibilite-dashboard.svg",
+        imageAlt: "Aperçu anonymisé du dashboard de disponibilité produit fini",
+      },
+    ],
+  },
+  {
+    slug: "carrerjob",
+    name: "CarrerJob AI",
+    shortLabel: "Career tech",
+    tagline:
+      "Un assistant de recherche d'emploi qui transforme un CV et des préférences en offres scorées et candidatures personnalisées.",
+    summary:
+      "CarrerJob AI centralise le parcours candidat dans un espace personnel. L'application analyse un CV PDF ou DOCX, enrichit le profil avec un portfolio, recueille les préférences en langage naturel, collecte et score les offres, puis génère une candidature adaptée. La soumission finale reste volontairement validée par l'utilisateur.",
+    challenge:
+      "Réduire la dispersion entre compréhension du profil, recherche d'offres, comparaison des opportunités et préparation des candidatures, sans retirer le contrôle final au candidat.",
+    role:
+      "Conception produit, architecture full-stack, structuration du workflow IA et développement de l'interface candidat.",
+    audience:
+      "Candidats souhaitant mieux cibler leurs offres et accélérer la préparation de candidatures personnalisées.",
+    heroNote:
+      "Une application full-stack pensée comme un copilote carrière : comprendre, cibler, scorer, générer, puis faire valider.",
+    palette: "career",
+    metrics: [
+      { value: "6 étapes", label: "Du chargement du CV à la préparation de la soumission." },
+      { value: "100 points", label: "Score sémantique pour comparer les offres au profil." },
+      { value: "Humain", label: "Validation explicite conservée avant toute candidature finale." },
+    ],
+    pillars: [
+      {
+        title: "Comprendre le profil",
+        description:
+          "Extraire les compétences, expériences, projets et signaux différenciants depuis le CV et le portfolio.",
+      },
+      {
+        title: "Cadrer les préférences",
+        description:
+          "Recueillir en conversation les métiers, localisations, contrats et secteurs recherchés ou exclus.",
+      },
+      {
+        title: "Prioriser les offres",
+        description:
+          "Collecter les opportunités, appliquer un préfiltre puis produire un score argumenté pour chaque offre.",
+      },
+      {
+        title: "Personnaliser",
+        description:
+          "Générer une lettre, un objet d'email et un message LinkedIn adaptés à l'offre sélectionnée.",
+      },
+    ],
+    architecture: [
+      {
+        title: "Frontend React",
+        description:
+          "Une interface Vite structurée autour du profil, de la conversation, des offres, des candidatures et des sessions.",
+      },
+      {
+        title: "API FastAPI",
+        description:
+          "Le backend orchestre l'authentification, l'analyse documentaire, le matching, la génération et l'inspection des pages cibles.",
+      },
+      {
+        title: "Pipeline IA",
+        description:
+          "Des prompts et scripts spécialisés séparent l'analyse du profil, la collecte, le scoring et la génération de candidature.",
+      },
+      {
+        title: "Persistance et déploiement",
+        description:
+          "SQLite en local, compatibilité PostgreSQL en production, frontend Vercel et backend conteneurisé pour Render.",
+      },
+    ],
+    flow: {
+      title: "Du profil à la candidature",
+      description:
+        "Un parcours continu qui conserve les décisions, les résultats et le contrôle utilisateur.",
+      steps: [
+        { label: "CV", detail: "Chargement et extraction d'un document PDF ou DOCX." },
+        { label: "Profil", detail: "Construction d'un profil enrichi avec compétences et projets." },
+        { label: "Préférences", detail: "Cadrage conversationnel des attentes et contraintes." },
+        { label: "Matching", detail: "Collecte, préfiltrage et scoring sémantique des offres." },
+        { label: "Candidature", detail: "Génération d'éléments personnalisés pour le recruteur." },
+        { label: "Validation", detail: "Inspection et plan de soumission soumis à l'accord humain." },
+      ],
+    },
+    outcomes: [
+      "Une recherche d'emploi structurée autour du profil réel plutôt que de mots-clés isolés.",
+      "Des offres comparables grâce à un scoring expliqué et à des critères de préférence persistants.",
+      "Des candidatures adaptées plus rapides à préparer, tout en gardant une validation humaine.",
+      "Une architecture modulaire utilisable comme application web et comme skill d'agent.",
+    ],
+    stack: [
+      "React",
+      "Vite",
+      "FastAPI",
+      "Python",
+      "SQLite / PostgreSQL",
+      "LLM",
+      "France Travail API",
+      "Playwright",
+      "Vercel / Render",
+    ],
+    spotlight: {
+      title: "Un espace candidat unifié du CV à la candidature",
+      description:
+        "L'interface rassemble le profil, les préférences conversationnelles, les offres scorées et les documents générés dans un seul workflow.",
+      image: "/project-media/carrerjob-dashboard.svg",
+      imageAlt: "Aperçu de l'espace candidat CarrerJob AI",
+    },
+    gallery: [
+      {
+        title: "Espace candidat et matching",
+        description:
+          "Une vue synthétique du parcours : analyse du CV, préférences, scoring des offres et préparation des candidatures.",
+        image: "/project-media/carrerjob-dashboard.svg",
+        imageAlt: "Dashboard candidat CarrerJob AI",
+      },
+    ],
+  },
   {
     slug: "vandewalle-safran",
     name: "Van De Walle x Safran Seats",
