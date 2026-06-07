@@ -21,11 +21,11 @@ const projects = [
       "Création d'un workflow assisté par IA : analyse PDF/DOCX, enrichissement avec le portfolio, préférences conversationnelles, scoring sémantique et génération de candidature.",
     result:
       "Un espace candidat cohérent qui priorise les opportunités et accélère la personnalisation, avec validation humaine avant toute soumission.",
-    tools: ["React", "FastAPI", "Python", "LLM", "Matching", "Human-in-the-loop"],
+    tools: ["React", "FastAPI", "Supabase", "Anthropic API", "Render", "Vercel"],
     cta: "/projects/carrerjob",
     ctaLabel: "Découvrir CarrerJob",
     media: {
-      src: "/project-media/carrerjob-dashboard.svg",
+      src: "/project-media/carrerjob-offres.png",
       alt: "Interface candidat de CarrerJob AI",
     },
   },
@@ -302,8 +302,8 @@ export default function HomePage() {
               className="group relative block aspect-[8/5] overflow-hidden rounded-[1.15rem] border border-white/10 bg-slate-900"
             >
               <Image
-                src="/project-media/carrerjob-dashboard.svg"
-                alt="Aperçu du dashboard CarrerJob AI"
+                src="/project-media/carrerjob-offres.png"
+                alt="Aperçu des offres recommandées dans CarrerJob AI"
                 fill
                 priority
                 className="object-cover transition duration-500 group-hover:scale-[1.035]"

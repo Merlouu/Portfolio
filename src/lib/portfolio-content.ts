@@ -226,7 +226,7 @@ export const projects: ProjectContent[] = [
     tagline:
       "Un assistant de recherche d'emploi qui transforme un CV et des préférences en offres scorées et candidatures personnalisées.",
     summary:
-      "CarrerJob AI centralise le parcours candidat dans un espace personnel. L'application analyse un CV PDF ou DOCX, enrichit le profil avec un portfolio, recueille les préférences en langage naturel, collecte et score les offres, puis génère une candidature adaptée. La soumission finale reste volontairement validée par l'utilisateur.",
+      "CarrerJob AI centralise le parcours candidat dans un espace personnel. L'application analyse un CV PDF ou DOCX, enrichit le profil avec un portfolio, recueille les préférences en langage naturel, collecte et score les offres avec l'API Anthropic, puis génère une candidature adaptée. Le frontend est déployé sur Vercel, l'API FastAPI sur Render et les données persistées dans Supabase. La soumission finale reste volontairement validée par l'utilisateur.",
     challenge:
       "Réduire la dispersion entre compréhension du profil, recherche d'offres, comparaison des opportunités et préparation des candidatures, sans retirer le contrôle final au candidat.",
     role:
@@ -275,14 +275,14 @@ export const projects: ProjectContent[] = [
           "Le backend orchestre l'authentification, l'analyse documentaire, le matching, la génération et l'inspection des pages cibles.",
       },
       {
-        title: "Pipeline IA",
+        title: "API Anthropic",
         description:
-          "Des prompts et scripts spécialisés séparent l'analyse du profil, la collecte, le scoring et la génération de candidature.",
+          "L'API Anthropic alimente l'analyse du profil, le scoring sémantique des offres et la génération des contenus de candidature.",
       },
       {
-        title: "Persistance et déploiement",
+        title: "Supabase, Render et Vercel",
         description:
-          "SQLite en local, compatibilité PostgreSQL en production, frontend Vercel et backend conteneurisé pour Render.",
+          "Supabase assure la persistance PostgreSQL des utilisateurs, sessions et tentatives. Vercel héberge le frontend et Render exécute l'API FastAPI.",
       },
     ],
     flow: {
@@ -309,26 +309,69 @@ export const projects: ProjectContent[] = [
       "Vite",
       "FastAPI",
       "Python",
-      "SQLite / PostgreSQL",
-      "LLM",
+      "Supabase / PostgreSQL",
+      "API Anthropic",
       "France Travail API",
       "Playwright",
-      "Vercel / Render",
+      "Render",
+      "Vercel",
     ],
     spotlight: {
       title: "Un espace candidat unifié du CV à la candidature",
       description:
-        "L'interface rassemble le profil, les préférences conversationnelles, les offres scorées et les documents générés dans un seul workflow.",
-      image: "/project-media/carrerjob-dashboard.svg",
+        "L'interface rassemble le profil, les préférences conversationnelles, les offres scorées et les actions de candidature dans un seul workflow.",
+      image: "/project-media/carrerjob-offres.png",
       imageAlt: "Aperçu de l'espace candidat CarrerJob AI",
     },
     gallery: [
       {
-        title: "Espace candidat et matching",
+        title: "Offres recommandées et scoring",
         description:
-          "Une vue synthétique du parcours : analyse du CV, préférences, scoring des offres et préparation des candidatures.",
-        image: "/project-media/carrerjob-dashboard.svg",
-        imageAlt: "Dashboard candidat CarrerJob AI",
+          "Une vue retravaillée de la grille d'offres : score de correspondance, accès à l'offre, génération de candidature et inspection de la soumission.",
+        image: "/project-media/carrerjob-offres.png",
+        imageAlt: "Offres recommandées et scorées dans CarrerJob AI",
+      },
+      {
+        title: "Espace candidat",
+        description:
+          "Le tableau de bord regroupe les sessions, le profil, la conversation, les intégrations, les offres et les documents produits.",
+        image: "/project-media/carrerjob-espace-candidat.png",
+        imageAlt: "Vue générale de l'espace candidat CarrerJob AI",
+      },
+      {
+        title: "Analyse du CV et du portfolio",
+        description:
+          "Le candidat charge son CV, associe son portfolio et obtient un profil structuré avec ses compétences principales.",
+        image: "/project-media/carrerjob-profil.png",
+        imageAlt: "Analyse du CV et du portfolio dans CarrerJob AI",
+      },
+      {
+        title: "Préférences conversationnelles",
+        description:
+          "Une conversation guidée permet de préciser les métiers, secteurs, localisations et contraintes avant le matching.",
+        image: "/project-media/carrerjob-conversation.png",
+        imageAlt: "Conversation de définition des préférences CarrerJob AI",
+      },
+      {
+        title: "Authentification et espace personnel",
+        description:
+          "Chaque utilisateur dispose d'un compte isolé pour conserver ses profils, sessions, offres et candidatures.",
+        image: "/project-media/carrerjob-connexion.png",
+        imageAlt: "Écran de connexion CarrerJob AI",
+      },
+      {
+        title: "Persistance Supabase",
+        description:
+          "La base PostgreSQL Supabase relie les utilisateurs, les sessions persistées et les tentatives de soumission.",
+        image: "/project-media/carrerjob-supabase-schema.png",
+        imageAlt: "Schéma de données Supabase de CarrerJob AI",
+      },
+      {
+        title: "Suivi des coûts Anthropic",
+        description:
+          "Un suivi dédié mesure le coût des appels Anthropic par étape : conversation, matching, génération et inspection.",
+        image: "/project-media/carrerjob-anthropic-costs.png",
+        imageAlt: "Suivi des coûts de l'API Anthropic pour CarrerJob AI",
       },
     ],
   },
